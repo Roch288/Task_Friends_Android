@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Task_Friends_Android</string>
+    <string name="search_hint">Search Tasks</string>
 </resources>
