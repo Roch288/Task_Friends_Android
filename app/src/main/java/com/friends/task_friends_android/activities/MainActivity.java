@@ -47,6 +47,10 @@ public class MainActivity extends AppCompatActivity {
         getTask();
     }
 
+    // Checking if the task list is empty , which indicates that the app just started since we have
+    // Declared it as a global variable
+    // But for this case we are adding all the notes from the database and notify the adapter about
+    // The new loaded Dataset
     private void getTask () {
 
         class GetTask_HS extends AsyncTask<Void, Void, List<Task>>{
@@ -61,6 +65,16 @@ public class MainActivity extends AppCompatActivity {
             @Override
             protected void onPostExecute(List<Task> tasks){
                 super.onPostExecute(tasks);
+
+                if (taskList.size()==0) {
+                    taskList.addAll(tasks);
+                    tasksAdapter.notifyDataSetChanged();
+                }
+                else {
+                    taskList.add(0,tasks.get(0));
+                    tasksAdapter.notifyItemInserted(0);
+                }
+                tasksRecyclerView.smoothScrollToPosition(0);
             }
         }
         new GetTask_HS().execute();
