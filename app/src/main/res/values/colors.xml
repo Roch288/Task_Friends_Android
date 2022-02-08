@@ -15,7 +15,7 @@
     <color name="colorTextHint">#7B7B7B</color>
     <color name="colorQuickActionsBackground">#2F2D2E</color>
     <color name="colorIcons">#A4A4A4</color>
-    <color name="colorTextSubtitle">#CECECE</color>
+    <color name="colorTextCategory">#CECECE</color>
     <color name="colorDefaultTaskColor">#333333</color>
     <color name="colorTaskSubtitleText">#FAFAFA</color>
     <color name="colorMiscellaneousBackground">#1F1F1F</color>
