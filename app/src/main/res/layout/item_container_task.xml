@@ -10,7 +10,7 @@
     >
 
     <TextView
-        android:id="@+id/textTitle"
+        android:id="@+id/textRVTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_8sdp"
@@ -23,7 +23,7 @@
         />
 
     <TextView
-        android:id="@+id/textCategory"
+        android:id="@+id/textRVCategory"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_8sdp"
@@ -37,7 +37,7 @@
         />
 
     <TextView
-        android:id="@+id/textCreatedDateTime"
+        android:id="@+id/textRVCreatedDateTime"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_8sdp"
