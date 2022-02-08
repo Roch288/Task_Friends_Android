@@ -14,6 +14,8 @@ import android.widget.Toast;
 
 import com.example.task_friends_android.R;
 import com.friends.task_friends_android.database.TaskDatabase;
+import com.friends.task_friends_android.db.TableTaskDB;
+import com.friends.task_friends_android.entities.TableTask;
 import com.friends.task_friends_android.entities.Task;
 
 import java.text.SimpleDateFormat;
@@ -31,20 +33,10 @@ public class CreateTaskActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_task);
 
         ImageView imageBack = findViewById(R.id.imageBack);
-        imageBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
+        imageBack.setOnClickListener(v -> onBackPressed());
 
         ImageView imageSave = findViewById(R.id.imageSave);
-        imageSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saveTask();
-            }
-        });
+        imageSave.setOnClickListener(v -> saveTask());
 
         inputTaskTitle = findViewById(R.id.inputTaskTitle);
         inputTaskCategory = findViewById(R.id.inputTaskCategory);
@@ -67,23 +59,31 @@ public class CreateTaskActivity extends AppCompatActivity {
             return;
         }
 
+        final TableTask tableTask = new TableTask();
+        tableTask.setTitle(inputTaskTitle.getText().toString());
+        tableTask.setCategory(inputTaskCategory.getText().toString());
+        tableTask.setTaskText(inputTaskDesc.getText().toString());
+        tableTask.setCreateDateTime(textCreateDateTime.getText().toString());
 
-        final Task task = new Task();
-        task.setTitle(inputTaskTitle.getText().toString());
-        task.setCategory(inputTaskCategory.getText().toString());
-        task.setTaskText(inputTaskDesc.getText().toString());
-        task.setCreateDateTime(textCreateDateTime.getText().toString());
+//        final Task task = new Task();
+//        task.setTitle(inputTaskTitle.getText().toString());
+//        task.setCategory(inputTaskCategory.getText().toString());
+//        task.setTaskText(inputTaskDesc.getText().toString());
+//        task.setCreateDateTime(textCreateDateTime.getText().toString());
 
 
         // ROOM does not allow database operation on the main thread
         // Use of Async task to bypass it.
 
         @SuppressLint("StaticFieldLeak")
-        class saveTask extends AsyncTask<Void, Void, Void> {
+        class SaveTask extends AsyncTask<Void, Void, Void> {
             @Override
             protected Void doInBackground(Void... voids){
-                TaskDatabase.getTaskDatabase(getApplicationContext()).taskDao().insertTask(task);
+                TableTaskDB.getDatabase(getApplicationContext()).tableTaskDao().insertTableTask(tableTask);
                 return null;
+
+//                TaskDatabase.getTaskDatabase(getApplicationContext()).taskDao().insertTask(task);
+//                return null;
             }
 
             @Override
@@ -95,6 +95,6 @@ public class CreateTaskActivity extends AppCompatActivity {
             }
         }
 
-        new saveTask().execute();
+        new SaveTask().execute();
     }
 }

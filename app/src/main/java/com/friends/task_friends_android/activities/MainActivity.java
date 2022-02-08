@@ -3,13 +3,18 @@ package com.friends.task_friends_android.activities;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.example.task_friends_android.R;
+import com.friends.task_friends_android.adapters.TableTaskAdapters;
 import com.friends.task_friends_android.database.TaskDatabase;
+import com.friends.task_friends_android.db.TableTaskDB;
+import com.friends.task_friends_android.entities.TableTask;
 import com.friends.task_friends_android.entities.Task;
 import com.friends.task_friends_android.adapters.TasksAdapters;
 
@@ -22,6 +27,8 @@ public class MainActivity extends AppCompatActivity {
 
     private RecyclerView tasksRecyclerView;
     private List<Task> taskList;
+    private List<TableTask> tableTasksList;
+    private TableTaskAdapters tableTaskAdapters;
     private TasksAdapters tasksAdapter;
 
 
@@ -40,9 +47,13 @@ public class MainActivity extends AppCompatActivity {
         tasksRecyclerView.setLayoutManager(
                 new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         );
-        taskList = new ArrayList<>();
-        tasksAdapter = new TasksAdapters(taskList);
-        tasksRecyclerView.setAdapter(tasksAdapter);
+        tableTasksList = new ArrayList<>();
+        tableTaskAdapters = new TableTaskAdapters((tableTasksList));
+        tasksRecyclerView.setAdapter(tableTaskAdapters);
+
+        // taskList = new ArrayList<>();
+        //tasksAdapter = new TasksAdapters(taskList);
+        //tasksRecyclerView.setAdapter(tasksAdapter);
 
         getTask();
     }
@@ -53,20 +64,24 @@ public class MainActivity extends AppCompatActivity {
     // The new loaded Dataset
     private void getTask () {
 
-        class GetTask_HS extends AsyncTask<Void, Void, List<Task>>{
+        @SuppressLint("StaticFieldLeak")
+        class GetTask_HS extends AsyncTask<Void, Void, List<TableTask>>{
 
             @Override
-            protected List<Task> doInBackground(Void... voids) {
-                return TaskDatabase
-                        .getTaskDatabase(getApplicationContext())
-                        .taskDao().getAllTasks();
+            protected List<TableTask> doInBackground(Void... voids) {
+                 /*return TaskDatabase
+                         .getDatabase(getApplicationContext())
+                         .taskDao().getAllTasks(); */
+
+                return TableTaskDB
+                        .getDatabase(getApplicationContext())
+                        .tableTaskDao().getAllTableTask();
             }
 
             @Override
-            protected void onPostExecute(List<Task> tasks){
-                super.onPostExecute(tasks);
-
-                if (taskList.size()==0) {
+            protected void onPostExecute(List<TableTask> tableTasks){
+                super.onPostExecute(tableTasks);
+                 /*if (taskList.size()==0) {
                     taskList.addAll(tasks);
                     tasksAdapter.notifyDataSetChanged();
                 }
@@ -75,6 +90,20 @@ public class MainActivity extends AppCompatActivity {
                     tasksAdapter.notifyItemInserted(0);
                 }
                 tasksRecyclerView.smoothScrollToPosition(0);
+                // Scrolling the recyclerview to the top */
+
+                if (tableTasksList.size() == 0) {
+                    tableTasksList.addAll(tableTasks);
+                    tableTaskAdapters.notifyDataSetChanged();
+                }
+                else {
+                    tableTasksList.add(0, tableTasks.get(0));
+                    tableTaskAdapters.notifyItemInserted(0);
+                }
+                tasksRecyclerView.smoothScrollToPosition(0);
+
+
+                Log.d("My_TableTasks", tableTasks.toString());
             }
         }
         new GetTask_HS().execute();
