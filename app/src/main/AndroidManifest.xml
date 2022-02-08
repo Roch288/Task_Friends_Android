@@ -10,12 +10,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Task_Friends_Android">
         <activity
-            android:name=".CreateTaskActivity"
+            android:name="com.friends.task_friends_android.activities.CreateTaskActivity"
             android:exported="false"
             android:windowSoftInputMode="stateHidden"
 
             />
-        <activity android:name=".MainActivity">
+        <activity android:name="com.friends.task_friends_android.activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
