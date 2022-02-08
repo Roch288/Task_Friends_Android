@@ -1,21 +1,28 @@
 package com.friends.task_friends_android.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ImageView;
 
 import com.example.task_friends_android.R;
 import com.friends.task_friends_android.database.TaskDatabase;
 import com.friends.task_friends_android.entities.Task;
+import com.friends.task_friends_android.adapters.TasksAdapters;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     public final static int REQUEST_CODE_ADD_TASK = 1;
+
+    private RecyclerView tasksRecyclerView;
+    private List<Task> taskList;
+    private TasksAdapters tasksAdapter;
 
 
     @Override
@@ -28,6 +35,15 @@ public class MainActivity extends AppCompatActivity {
                 new Intent(getApplicationContext(), CreateTaskActivity.class),
                 REQUEST_CODE_ADD_TASK
         ));
+
+        tasksRecyclerView = findViewById(R.id.tasksRecycleView);
+        tasksRecyclerView.setLayoutManager(
+                new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+        );
+        taskList = new ArrayList<>();
+        tasksAdapter = new TasksAdapters(taskList);
+        tasksRecyclerView.setAdapter(tasksAdapter);
+
         getTask();
     }
 
@@ -45,7 +61,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             protected void onPostExecute(List<Task> tasks){
                 super.onPostExecute(tasks);
-                Log.d("My_Tasks", tasks.toString());
             }
         }
         new GetTask_HS().execute();
