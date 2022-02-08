@@ -19,7 +19,7 @@
         android:fontFamily="@font/ubuntu_bold"
         android:includeFontPadding="false"
         android:textColor="@color/white"
-        android:textSize="@dimen/_13ssp"
+        android:textSize="@dimen/_15ssp"
         />
 
     <TextView

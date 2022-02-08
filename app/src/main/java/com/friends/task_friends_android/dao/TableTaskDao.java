@@ -1,6 +1,7 @@
 package com.friends.task_friends_android.dao;
 
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
@@ -15,6 +16,9 @@ public interface TableTaskDao {
     @Query("SELECT * FROM tableTask ORDER BY id DESC")
     List<TableTask> getAllTableTask();
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertTableTask (TableTask tableTask);
+
+    @Delete
+    void deleteTask(TableTask tableTask);
 }

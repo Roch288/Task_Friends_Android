@@ -61,7 +61,7 @@ public class TableTaskAdapters extends RecyclerView.Adapter<TableTaskAdapters.Ta
         }
 
         void setTableTask(TableTask tableTask) {
-            tableTask.setTaskText(tableTask.getTitle());
+            textTableTitle.setText(tableTask.getTitle());
             if (tableTask.getCategory().trim().isEmpty()){
                 textTableCategory.setVisibility(View.GONE);
             }

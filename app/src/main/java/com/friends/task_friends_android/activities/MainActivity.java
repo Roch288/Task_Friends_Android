@@ -1,5 +1,6 @@
 package com.friends.task_friends_android.activities;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
@@ -108,5 +109,13 @@ public class MainActivity extends AppCompatActivity {
         }
         new GetTask_HS().execute();
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_ADD_TASK && resultCode == RESULT_OK) {
+            getTask();
+        }
     }
 }
