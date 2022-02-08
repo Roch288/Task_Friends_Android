@@ -7,8 +7,10 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.task_friends_android.R;
+import com.friends.task_friends_android.entities.Task;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -42,5 +44,26 @@ public class CreateTaskActivity extends AppCompatActivity {
                 new SimpleDateFormat("EEEE, dd MMMM yyyy HH:mm a", Locale.getDefault())
                         .format(new Date())
         );
+    }
+
+    private void saveTask(){
+        if (inputTaskTitle.getText().toString().trim().isEmpty()) {
+            Toast.makeText(this, "TITLE CANNOT BE EMPTY!! ", Toast.LENGTH_SHORT).show();
+            return;
+        } else if (inputTaskCategory.getText().toString().trim().isEmpty()) {
+            Toast.makeText(this, "CATEGORY CANNOT BE EMPTY", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+
+        final Task task = new Task();
+        task.setTitle(inputTaskTitle.getText().toString());
+        task.setCategory(inputTaskCategory.getText().toString());
+        task.setTaskText(inputTaskDesc.getText().toString());
+        task.setCreateDateTime(textCreateDateTime.getText().toString());
+
+
+        // ROOM does not allow database operation on the main thread
+        // Use of Async task to bypass it.
     }
 }
