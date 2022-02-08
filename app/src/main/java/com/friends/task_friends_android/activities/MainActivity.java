@@ -2,12 +2,16 @@ package com.friends.task_friends_android.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.View;
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.example.task_friends_android.R;
-import com.friends.task_friends_android.activities.CreateTaskActivity;
+import com.friends.task_friends_android.database.TaskDatabase;
+import com.friends.task_friends_android.entities.Task;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -20,14 +24,31 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         ImageView imageAddTaskMain = findViewById(R.id.imageAddTaskMain);
-        imageAddTaskMain.setOnClickListener(new View.OnClickListener() {
+        imageAddTaskMain.setOnClickListener(v -> startActivityForResult(
+                new Intent(getApplicationContext(), CreateTaskActivity.class),
+                REQUEST_CODE_ADD_TASK
+        ));
+        getTask();
+    }
+
+    private void getTask () {
+
+        class GetTask_HS extends AsyncTask<Void, Void, List<Task>>{
+
             @Override
-            public void onClick(View v) {
-                startActivityForResult(
-                        new Intent(getApplicationContext(), CreateTaskActivity.class),
-                        REQUEST_CODE_ADD_TASK
-                );
+            protected List<Task> doInBackground(Void... voids) {
+                return TaskDatabase
+                        .getTaskDatabase(getApplicationContext())
+                        .taskDao().getAllTasks();
             }
-        });
+
+            @Override
+            protected void onPostExecute(List<Task> tasks){
+                super.onPostExecute(tasks);
+                Log.d("My_Tasks", tasks.toString());
+            }
+        }
+        new GetTask_HS().execute();
+
     }
 }
