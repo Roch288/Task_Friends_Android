@@ -32,8 +32,8 @@ public class Task implements Serializable {
     @ColumnInfo(name = "image_path")
     private String imagePath;
 
-    @ColumnInfo(name = "image_list")
-    private ArrayList<String> image;
+//    @ColumnInfo(name = "image_list")
+//    private ArrayList<String> image;
 
     @ColumnInfo(name = "color")
     private String color;
@@ -103,13 +103,13 @@ public class Task implements Serializable {
         this.imagePath = imagePath;
     }
 
-    public ArrayList<String> getImage() {
-        return image;
-    }
-
-    public void setImage(ArrayList<String> image) {
-        this.image = image;
-    }
+//    public ArrayList<String> getImage() {
+//        return image;
+//    }
+//
+//    public void setImage(ArrayList<String> image) {
+//        this.image = image;
+//    }
 
     public String getColor() {
         return color;
