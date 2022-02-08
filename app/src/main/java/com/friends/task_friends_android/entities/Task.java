@@ -1,15 +1,16 @@
 package com.friends.task_friends_android.entities;
 
+import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
-
+import java.io.Serializable;
 import java.util.ArrayList;
 
 
 @Entity (tableName = "tasks")
 
-public class Task {
+public class Task implements Serializable {
     @PrimaryKey(autoGenerate = true)
     private int id;
 
@@ -140,5 +141,11 @@ public class Task {
 
     public void setCompleted(String completed) {
         this.completed = completed;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return title + " : " + createDateTime;
     }
 }
