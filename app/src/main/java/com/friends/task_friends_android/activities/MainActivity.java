@@ -1,10 +1,13 @@
-package com.example.task_friends_android;
+package com.friends.task_friends_android.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+
+import com.example.task_friends_android.R;
+import com.friends.task_friends_android.activities.CreateTaskActivity;
 
 public class MainActivity extends AppCompatActivity {
 

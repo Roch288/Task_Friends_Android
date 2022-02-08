@@ -1,4 +1,4 @@
-package com.example.task_friends_android;
+package com.friends.task_friends_android;
 
 import android.content.Context;
 
