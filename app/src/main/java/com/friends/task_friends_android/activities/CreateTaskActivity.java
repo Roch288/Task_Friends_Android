@@ -2,6 +2,9 @@ package com.friends.task_friends_android.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -10,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.task_friends_android.R;
+import com.friends.task_friends_android.database.TaskDatabase;
 import com.friends.task_friends_android.entities.Task;
 
 import java.text.SimpleDateFormat;
@@ -31,6 +35,14 @@ public class CreateTaskActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 onBackPressed();
+            }
+        });
+
+        ImageView imageSave = findViewById(R.id.imageSave);
+        imageSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveTask();
             }
         });
 
@@ -65,5 +77,24 @@ public class CreateTaskActivity extends AppCompatActivity {
 
         // ROOM does not allow database operation on the main thread
         // Use of Async task to bypass it.
+
+        @SuppressLint("StaticFieldLeak")
+        class saveTask extends AsyncTask<Void, Void, Void> {
+            @Override
+            protected Void doInBackground(Void... voids){
+                TaskDatabase.getTaskDatabase(getApplicationContext()).taskDao().insertTask(task);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid){
+                super.onPostExecute(aVoid);
+                Intent intent = new Intent();
+                setResult(RESULT_OK, intent);
+                finish();
+            }
+        }
+
+        new saveTask().execute();
     }
 }

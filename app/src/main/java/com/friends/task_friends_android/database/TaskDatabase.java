@@ -13,7 +13,7 @@ import com.friends.task_friends_android.entities.Task;
 public abstract class TaskDatabase extends RoomDatabase {
     private static TaskDatabase taskDatabase;
 
-    public synchronized TaskDatabase getTaskDatabase(Context context){
+    public static synchronized TaskDatabase getTaskDatabase(Context context){
         if (taskDatabase == null){
             taskDatabase = Room.databaseBuilder(
                     context,
