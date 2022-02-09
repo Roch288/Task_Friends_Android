@@ -52,9 +52,9 @@ public class TasksAdapters extends RecyclerView.Adapter<TasksAdapters.TaskViewHo
         TextView textTaskTitle, textTaskCategory, textTaskCreateDate;
         public TaskViewHolders(@NonNull View itemView) {
             super(itemView);
-            textTaskTitle = itemView.findViewById(R.id.textTitle);
-            textTaskCategory = itemView.findViewById(R.id.textCategory);
-            textTaskCreateDate = itemView.findViewById(R.id.textCreateDateTime);
+            textTaskTitle = itemView.findViewById(R.id.textRVTitle);
+            textTaskCategory = itemView.findViewById(R.id.textRVCategory);
+            textTaskCreateDate = itemView.findViewById(R.id.textRVCreatedDateTime);
         }
         void setTask(Task task) {
             textTaskTitle.setText(task.getTitle());

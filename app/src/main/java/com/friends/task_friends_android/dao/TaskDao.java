@@ -12,7 +12,7 @@ import java.util.List;
 
 @Dao
 public interface TaskDao {
-    @Query("SELECT * FROM tasks ORDER BY id DESC")
+    @Query("SELECT * FROM taskTable")
     List<Task> getAllTasks();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -21,6 +21,6 @@ public interface TaskDao {
     @Delete
     void deleteTask(Task task);
 
-    @Query("SELECT * FROM TASKS where id = :imageId")
-    List<Task> getImageByImageId(int imageId);
+//    @Query("SELECT * FROM TASKS where id = :imageId")
+//    List<Task> getImageByImageId(int imageId);
 }

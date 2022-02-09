@@ -9,11 +9,11 @@ import androidx.room.RoomDatabase;
 import com.friends.task_friends_android.dao.TaskDao;
 import com.friends.task_friends_android.entities.Task;
 
-@Database(entities = Task.class, version = 1, exportSchema = false)
+@Database(entities = {Task.class}, version = 1, exportSchema = false)
 public abstract class TaskDatabase extends RoomDatabase {
     private static TaskDatabase taskDatabase;
 
-    public static synchronized TaskDatabase getTaskDatabase(Context context){
+    public static synchronized TaskDatabase getDatabase(Context context){
         if (taskDatabase == null){
             taskDatabase = Room.databaseBuilder(
                     context,
