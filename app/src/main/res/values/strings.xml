@@ -4,4 +4,5 @@
     <string name="task_category">Task Category</string>
     <string name="this_is_where_you_fill_the_description_of_the_task">This is where you fill the description of the Task ...</string>
     <string name="task_title">Task Title</string>
+    <string name="more">MORE</string>
 </resources>
