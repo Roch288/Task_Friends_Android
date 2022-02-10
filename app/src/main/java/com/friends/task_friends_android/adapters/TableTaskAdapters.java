@@ -8,7 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.task_friends_android.R;
+import com.friends.task_friends_android.R;
 import com.friends.task_friends_android.entities.TableTask;
 
 import java.util.List;

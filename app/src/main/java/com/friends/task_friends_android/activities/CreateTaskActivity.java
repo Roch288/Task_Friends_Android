@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.task_friends_android.R;
+import com.friends.task_friends_android.R;
 import com.friends.task_friends_android.database.TaskDatabase;
 import com.friends.task_friends_android.db.TableTaskDB;
 import com.friends.task_friends_android.entities.TableTask;

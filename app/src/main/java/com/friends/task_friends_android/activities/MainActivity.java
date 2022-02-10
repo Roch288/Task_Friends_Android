@@ -11,7 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
 
-import com.example.task_friends_android.R;
+import com.friends.task_friends_android.R;
 import com.friends.task_friends_android.adapters.TableTaskAdapters;
 import com.friends.task_friends_android.database.TaskDatabase;
 import com.friends.task_friends_android.db.TableTaskDB;
