@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,6 +18,7 @@ import com.friends.task_friends_android.database.TaskDatabase;
 import com.friends.task_friends_android.db.TableTaskDB;
 import com.friends.task_friends_android.entities.TableTask;
 import com.friends.task_friends_android.entities.Task;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -48,6 +50,8 @@ public class CreateTaskActivity extends AppCompatActivity {
                 new SimpleDateFormat("EEEE, dd MMMM yyyy HH:mm a", Locale.getDefault())
                         .format(new Date())
         );
+
+        initMore();
     }
 
     private void saveTask(){
@@ -96,5 +100,22 @@ public class CreateTaskActivity extends AppCompatActivity {
         }
 
         new SaveTask().execute();
+    }
+
+    private void initMore(){
+        final LinearLayout layoutMore = findViewById(R.id.layoutBottomBar);
+        final BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(layoutMore);
+        layoutMore.findViewById(R.id.textMore).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(bottomSheetBehavior.getState() != BottomSheetBehavior.STATE_EXPANDED){
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                }
+                else {
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                }
+
+            }
+        });
     }
 }

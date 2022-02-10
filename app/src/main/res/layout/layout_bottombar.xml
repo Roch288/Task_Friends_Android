@@ -6,8 +6,9 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:background="@drawable/background_bottombar"
+    app:behavior_peekHeight="@dimen/_40sdp"
     app:layout_behavior="@string/bottom_sheet_behavior"
-    app:behavior_peekHeight="@dimen/_40sdp">
+    >
 
     <TextView
         android:id="@+id/textMore"
@@ -26,9 +27,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:layout_margin="@dimen/_5sdp"
+        android:layout_margin="@dimen/_10sdp"
         android:orientation="horizontal"
-
         >
         <FrameLayout
 
@@ -107,46 +107,17 @@
                 app:tint="@color/white" />
 
         </FrameLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/_10sdp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
 
         <TextView
-            android:layout_width="@dimen/_90sdp"
+            android:id="@+id/textPriority"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/low"
-            android:textColor="@color/teal_700"
-            android:textSize="@dimen/_13ssp"
+            android:text="@string/set_priority"
+            android:textColor="@color/white"
             android:fontFamily="@font/ubuntu_medium"
-
+            android:textSize="@dimen/_15ssp"
+            android:includeFontPadding="false"
             />
-        <TextView
-            android:layout_width="@dimen/_110sdp"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/medium"
-            android:textColor="@color/colorTaskColor2"
-            android:textSize="@dimen/_13ssp"
-            android:fontFamily="@font/ubuntu_medium"
-
-            />
-        <TextView
-            android:layout_width="@dimen/_90sdp"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/high"
-            android:textColor="@color/colorTaskColor3"
-            android:textSize="@dimen/_13ssp"
-            android:fontFamily="@font/ubuntu_medium"
-
-            />
-
     </LinearLayout>
 
 </LinearLayout>
