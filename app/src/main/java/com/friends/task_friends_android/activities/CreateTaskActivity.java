@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -28,6 +30,8 @@ public class CreateTaskActivity extends AppCompatActivity {
 
     private EditText inputTaskTitle, inputTaskCategory, inputTaskDesc;
     private TextView textCreateDateTime;
+    private View viewCategoryIndicator;
+    private String selectedTaskColor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +48,7 @@ public class CreateTaskActivity extends AppCompatActivity {
         inputTaskCategory = findViewById(R.id.inputTaskCategory);
         inputTaskDesc = findViewById(R.id.inputTaskDesc);
         textCreateDateTime = findViewById(R.id.textCreateDateTime);
+        viewCategoryIndicator = findViewById(R.id.viewCategoryIndicator);
 
 
         textCreateDateTime.setText(
@@ -51,7 +56,9 @@ public class CreateTaskActivity extends AppCompatActivity {
                         .format(new Date())
         );
 
+        selectedTaskColor = "#333333";
         initMore();
+        setCategoryIndicatorColor();
     }
 
     private void saveTask(){
@@ -68,6 +75,7 @@ public class CreateTaskActivity extends AppCompatActivity {
         tableTask.setCategory(inputTaskCategory.getText().toString());
         tableTask.setTaskText(inputTaskDesc.getText().toString());
         tableTask.setCreateDateTime(textCreateDateTime.getText().toString());
+        tableTask.setColor(selectedTaskColor);
 
 //        final Task task = new Task();
 //        task.setTitle(inputTaskTitle.getText().toString());
@@ -117,5 +125,45 @@ public class CreateTaskActivity extends AppCompatActivity {
 
             }
         });
+
+        final ImageView imagePriorityLow = layoutMore.findViewById(R.id.imagePriorityLow);
+        final ImageView imagePriorityMedium = layoutMore.findViewById(R.id.imagePriorityMedium);
+        final ImageView imagePriorityHigh = layoutMore.findViewById(R.id.imagePriorityHigh);
+
+        layoutMore.findViewById(R.id.viewColorLow).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectedTaskColor = "#FF018786";
+                imagePriorityLow.setImageResource(R.drawable.ic_done);
+                imagePriorityMedium.setImageResource(0);
+                imagePriorityHigh.setImageResource(0);
+                setCategoryIndicatorColor();
+            }
+        });
+        layoutMore.findViewById(R.id.viewColorMedium).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectedTaskColor = "#FDBE3B";
+                imagePriorityLow.setImageResource(0);
+                imagePriorityMedium.setImageResource(R.drawable.ic_done);
+                imagePriorityHigh.setImageResource(0);
+                setCategoryIndicatorColor();
+            }
+        });
+        layoutMore.findViewById(R.id.viewColorHigh).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectedTaskColor = "#FF4842";
+                imagePriorityLow.setImageResource(0);
+                imagePriorityMedium.setImageResource(0);
+                imagePriorityHigh.setImageResource(R.drawable.ic_done);
+                setCategoryIndicatorColor();
+            }
+        });
+    }
+
+    private void setCategoryIndicatorColor() {
+        GradientDrawable gradientDrawable = (GradientDrawable) viewCategoryIndicator.getBackground();
+        gradientDrawable.setColor(Color.parseColor(selectedTaskColor));
     }
 }
