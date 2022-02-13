@@ -9,4 +9,5 @@
     <string name="medium">MEDIUM</string>
     <string name="high">HIGH</string>
     <string name="set_priority">SET PRIORITY</string>
+    <string name="add_image">Add Image</string>
 </resources>

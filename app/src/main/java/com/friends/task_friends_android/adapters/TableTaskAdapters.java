@@ -1,8 +1,11 @@
 package com.friends.task_friends_android.adapters;
 
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -52,12 +55,14 @@ public class TableTaskAdapters extends RecyclerView.Adapter<TableTaskAdapters.Ta
     static class TableTaskViewHolder extends RecyclerView.ViewHolder{
 
         TextView textTableTitle, textTableCategory, textTableDate;
+        LinearLayout layoutTask;
 
         public TableTaskViewHolder(@NonNull View itemView) {
             super(itemView);
             textTableTitle = itemView.findViewById(R.id.textRVTitle);
             textTableCategory = itemView.findViewById(R.id.textRVCategory);
             textTableDate = itemView.findViewById(R.id.textRVCreatedDateTime);
+            layoutTask = itemView.findViewById(R.id.layoutTask);
         }
 
         void setTableTask(TableTask tableTask) {
@@ -71,6 +76,14 @@ public class TableTaskAdapters extends RecyclerView.Adapter<TableTaskAdapters.Ta
             }
 
             textTableDate.setText(tableTask.getCreateDateTime());
+
+            GradientDrawable gradientDrawable = (GradientDrawable) layoutTask.getBackground();
+            if (tableTask.getColor() != null){
+                gradientDrawable.setColor(Color.parseColor(tableTask.getColor()));
+            }
+            else {
+                gradientDrawable.setColor(Color.parseColor("#333333"));
+            }
         }
     }
 }

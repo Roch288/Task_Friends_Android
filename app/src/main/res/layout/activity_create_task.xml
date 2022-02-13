@@ -115,6 +115,17 @@
                 app:layout_constraintTop_toTopOf="@id/inputTaskCategory"
                 />
 
+            <ImageView
+                android:id="@+id/imageTask"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_12sdp"
+                android:layout_marginTop="@dimen/_15sdp"
+                android:layout_marginEnd="@dimen/_12sdp"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/app_name"
+                app:layout_constraintTop_toBottomOf="@id/inputTaskCategory"
+                />
 
             <EditText
                 android:id="@+id/inputTaskDesc"
@@ -136,8 +147,7 @@
                 android:textColorHint="@color/colorTextHint"
                 android:textSize="@dimen/_13sdp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/inputTaskCategory"
-
+                app:layout_constraintTop_toBottomOf="@id/imageTask"
                 />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
