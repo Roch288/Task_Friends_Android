@@ -112,18 +112,18 @@ public class MainActivity extends AppCompatActivity implements TableTaskListener
                     tableTasksList.addAll(tableTasks);
                     tableTaskAdapters.notifyDataSetChanged();
                 } else if (requestCode == REQUEST_CODE_ADD_TASK) {
-                    tableTasks.add(0, tableTasks.get(0));
+                    tableTasksList.add(0, tableTasks.get(0));
                     tableTaskAdapters.notifyItemInserted(0);
                     tasksRecyclerView.smoothScrollToPosition(0);
                 } else if (requestCode == REQUEST_CODE_UPDATE_TASK){
-                    tableTasks.remove(taskClickedPosition);
-                    tableTasks.add(taskClickedPosition, tableTasks.get(taskClickedPosition));
+                    tableTasksList.remove(taskClickedPosition);
+                    tableTasksList.add(taskClickedPosition, tableTasks.get(taskClickedPosition));
                     tableTaskAdapters.notifyItemChanged(taskClickedPosition);
 
                 }
 
 
-                Log.d("My_TableTasks", tableTasks.toString());
+                Log.d("My_TableTasks", tableTasksList.toString());
             }
         }
         new GetTask_HS().execute();
