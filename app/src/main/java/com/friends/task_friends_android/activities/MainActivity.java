@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements TableTaskListener
         //tasksAdapter = new TasksAdapters(taskList);
         //tasksRecyclerView.setAdapter(tasksAdapter);
 
-        getTask(REQUEST_CODE_SHOW_TASKS);
+        getTask(REQUEST_CODE_SHOW_TASKS, false);
     }
 
     @Override
@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements TableTaskListener
     // Declared it as a global variable
     // But for this case we are adding all the notes from the database and notify the adapter about
     // The new loaded Dataset
-    private void getTask (final int requestCode) {
+    private void getTask (final int requestCode, final boolean isTaskDeleted) {
 
         @SuppressLint("StaticFieldLeak")
         class GetTask_HS extends AsyncTask<Void, Void, List<TableTask>>{
@@ -117,8 +117,12 @@ public class MainActivity extends AppCompatActivity implements TableTaskListener
                     tasksRecyclerView.smoothScrollToPosition(0);
                 } else if (requestCode == REQUEST_CODE_UPDATE_TASK){
                     tableTasksList.remove(taskClickedPosition);
-                    tableTasksList.add(taskClickedPosition, tableTasks.get(taskClickedPosition));
-                    tableTaskAdapters.notifyItemChanged(taskClickedPosition);
+                    if (isTaskDeleted){
+                        tableTaskAdapters.notifyItemRemoved(taskClickedPosition);
+                    } else {
+                        tableTasksList.add(taskClickedPosition, tableTasks.get(taskClickedPosition));
+                        tableTaskAdapters.notifyItemChanged(taskClickedPosition);
+                    }
 
                 }
 
@@ -134,10 +138,10 @@ public class MainActivity extends AppCompatActivity implements TableTaskListener
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_ADD_TASK && resultCode == RESULT_OK) {
-            getTask(REQUEST_CODE_SHOW_TASKS);
+            getTask(REQUEST_CODE_SHOW_TASKS, false);
         } else if (requestCode == REQUEST_CODE_UPDATE_TASK && resultCode == RESULT_OK){
             if (data != null){
-                getTask(REQUEST_CODE_UPDATE_TASK);
+                getTask(REQUEST_CODE_UPDATE_TASK, data.getBooleanExtra("isTaskDeleted", false));
             }
         }
     }
