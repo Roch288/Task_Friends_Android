@@ -34,6 +34,8 @@ public class MainActivity extends AppCompatActivity implements TableTaskListener
     private TableTaskAdapters tableTaskAdapters;
     private TasksAdapters tasksAdapter;
 
+    private int taskClickedPosition = -1;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +65,11 @@ public class MainActivity extends AppCompatActivity implements TableTaskListener
 
     @Override
     public void onTableTaskClicked(TableTask tableTask, int position) {
-
+        taskClickedPosition = position;
+        Intent intent = new Intent(getApplicationContext(), CreateTaskActivity.class);
+        intent.putExtra("isViewUpdate", true);
+        intent.putExtra("tableTask", tableTask);
+        startActivityForResult(intent, REQUIEST_CODE_UPDATE_TASK);
     }
 
     // Checking if the task list is empty , which indicates that the app just started since we have
