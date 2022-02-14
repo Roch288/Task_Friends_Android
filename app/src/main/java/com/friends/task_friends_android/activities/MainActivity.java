@@ -26,6 +26,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements TableTaskListeners {
 
     public final static int REQUEST_CODE_ADD_TASK = 1;
+    public final static int REQUIEST_CODE_UPDATE_TASK = 2;
 
     private RecyclerView tasksRecyclerView;
     private List<Task> taskList;
