@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity implements TableTaskListener
 
     public final static int REQUEST_CODE_ADD_TASK = 1;
     public final static int REQUEST_CODE_UPDATE_TASK = 2;
-    public final static int REQUEST_CODE_SHOW_NOTES = 3;
+    public final static int REQUEST_CODE_SHOW_TASKS = 3;
 
     private RecyclerView tasksRecyclerView;
     private List<Task> taskList;
@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements TableTaskListener
         //tasksAdapter = new TasksAdapters(taskList);
         //tasksRecyclerView.setAdapter(tasksAdapter);
 
-        getTask();
+        getTask(REQUEST_CODE_SHOW_TASKS);
     }
 
     @Override
@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements TableTaskListener
     // Declared it as a global variable
     // But for this case we are adding all the notes from the database and notify the adapter about
     // The new loaded Dataset
-    private void getTask () {
+    private void getTask (final int requestCode) {
 
         @SuppressLint("StaticFieldLeak")
         class GetTask_HS extends AsyncTask<Void, Void, List<TableTask>>{
@@ -93,6 +93,7 @@ public class MainActivity extends AppCompatActivity implements TableTaskListener
                         .tableTaskDao().getAllTableTask();
             }
 
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             protected void onPostExecute(List<TableTask> tableTasks){
                 super.onPostExecute(tableTasks);
@@ -107,15 +108,19 @@ public class MainActivity extends AppCompatActivity implements TableTaskListener
                 tasksRecyclerView.smoothScrollToPosition(0);
                 // Scrolling the recyclerview to the top */
 
-                if (tableTasksList.size() == 0) {
+                if (requestCode == REQUEST_CODE_SHOW_TASKS){
                     tableTasksList.addAll(tableTasks);
                     tableTaskAdapters.notifyDataSetChanged();
-                }
-                else {
-                    tableTasksList.add(0, tableTasks.get(0));
+                } else if (requestCode == REQUEST_CODE_ADD_TASK) {
+                    tableTasks.add(0, tableTasks.get(0));
                     tableTaskAdapters.notifyItemInserted(0);
+                    tasksRecyclerView.smoothScrollToPosition(0);
+                } else if (requestCode == REQUEST_CODE_UPDATE_TASK){
+                    tableTasks.remove(taskClickedPosition);
+                    tableTasks.add(taskClickedPosition, tableTasks.get(taskClickedPosition));
+                    tableTaskAdapters.notifyItemChanged(taskClickedPosition);
+
                 }
-                tasksRecyclerView.smoothScrollToPosition(0);
 
 
                 Log.d("My_TableTasks", tableTasks.toString());
@@ -129,7 +134,11 @@ public class MainActivity extends AppCompatActivity implements TableTaskListener
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_ADD_TASK && resultCode == RESULT_OK) {
-            getTask();
+            getTask(REQUEST_CODE_SHOW_TASKS);
+        } else if (requestCode == REQUEST_CODE_UPDATE_TASK && resultCode == RESULT_OK){
+            if (data != null){
+                getTask(REQUEST_CODE_UPDATE_TASK);
+            }
         }
     }
 }
