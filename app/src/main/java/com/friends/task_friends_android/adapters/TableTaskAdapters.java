@@ -1,5 +1,7 @@
 package com.friends.task_friends_android.adapters;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
@@ -13,6 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.friends.task_friends_android.R;
 import com.friends.task_friends_android.entities.TableTask;
+import com.friends.task_friends_android.listeners.TableTaskListeners;
+import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.List;
 
@@ -20,9 +24,11 @@ import java.util.List;
 public class TableTaskAdapters extends RecyclerView.Adapter<TableTaskAdapters.TableTaskViewHolder> {
 
     private List<TableTask> tablesTasks;
+    private TableTaskListeners tableTaskListeners;
 
-    public TableTaskAdapters(List<TableTask> tablesTasks) {
+    public TableTaskAdapters(List<TableTask> tablesTasks, TableTaskListeners tableTaskListeners) {
         this.tablesTasks = tablesTasks;
+        this.tableTaskListeners = tableTaskListeners;
     }
 
     @NonNull
@@ -40,6 +46,12 @@ public class TableTaskAdapters extends RecyclerView.Adapter<TableTaskAdapters.Ta
     @Override
     public void onBindViewHolder(@NonNull TableTaskViewHolder holder, int position) {
         holder.setTableTask(tablesTasks.get(position));
+        holder.layoutTask.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tableTaskListeners.onTableTaskClicked(tablesTasks.get(position), position);
+            }
+        });
     }
 
     @Override
@@ -56,6 +68,7 @@ public class TableTaskAdapters extends RecyclerView.Adapter<TableTaskAdapters.Ta
 
         TextView textTableTitle, textTableCategory, textTableDate;
         LinearLayout layoutTask;
+        RoundedImageView imageTableTask;
 
         public TableTaskViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -63,6 +76,7 @@ public class TableTaskAdapters extends RecyclerView.Adapter<TableTaskAdapters.Ta
             textTableCategory = itemView.findViewById(R.id.textRVCategory);
             textTableDate = itemView.findViewById(R.id.textRVCreatedDateTime);
             layoutTask = itemView.findViewById(R.id.layoutTask);
+            imageTableTask = itemView.findViewById(R.id.imageRVTask);
         }
 
         void setTableTask(TableTask tableTask) {
@@ -83,6 +97,14 @@ public class TableTaskAdapters extends RecyclerView.Adapter<TableTaskAdapters.Ta
             }
             else {
                 gradientDrawable.setColor(Color.parseColor("#333333"));
+            }
+
+            if (tableTask.getImagePath() == null) {
+                imageTableTask.setImageBitmap(BitmapFactory.decodeFile(tableTask.getImagePath()));
+                imageTableTask.setVisibility(View.VISIBLE);
+            }
+            else {
+                imageTableTask.setVisibility(View.GONE);
             }
         }
     }

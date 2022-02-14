@@ -123,7 +123,7 @@
     <LinearLayout
         android:id="@+id/layoutAddImage"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_45sdp"
+        android:layout_height="@dimen/_35sdp"
         android:layout_margin="@dimen/_10sdp"
         android:gravity="center_vertical"
         android:orientation="horizontal"

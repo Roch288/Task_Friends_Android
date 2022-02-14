@@ -17,12 +17,13 @@ import com.friends.task_friends_android.database.TaskDatabase;
 import com.friends.task_friends_android.db.TableTaskDB;
 import com.friends.task_friends_android.entities.TableTask;
 import com.friends.task_friends_android.entities.Task;
+import com.friends.task_friends_android.listeners.TableTaskListeners;
 import com.friends.task_friends_android.adapters.TasksAdapters;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements TableTaskListeners {
 
     public final static int REQUEST_CODE_ADD_TASK = 1;
 
@@ -49,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
                 new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         );
         tableTasksList = new ArrayList<>();
-        tableTaskAdapters = new TableTaskAdapters((tableTasksList));
+        tableTaskAdapters = new TableTaskAdapters(tableTasksList, this);
         tasksRecyclerView.setAdapter(tableTaskAdapters);
 
         // taskList = new ArrayList<>();
@@ -57,6 +58,11 @@ public class MainActivity extends AppCompatActivity {
         //tasksRecyclerView.setAdapter(tasksAdapter);
 
         getTask();
+    }
+
+    @Override
+    public void onTableTaskClicked(TableTask tableTask, int position) {
+
     }
 
     // Checking if the task list is empty , which indicates that the app just started since we have
