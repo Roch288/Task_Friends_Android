@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.friends.task_friends_android.R;
 import com.friends.task_friends_android.entities.TableTask;
+import com.friends.task_friends_android.listeners.TableTaskListeners;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.List;
@@ -23,9 +24,11 @@ import java.util.List;
 public class TableTaskAdapters extends RecyclerView.Adapter<TableTaskAdapters.TableTaskViewHolder> {
 
     private List<TableTask> tablesTasks;
+    private TableTaskListeners tableTaskListeners;
 
-    public TableTaskAdapters(List<TableTask> tablesTasks) {
+    public TableTaskAdapters(List<TableTask> tablesTasks, TableTaskListeners tableTaskListeners) {
         this.tablesTasks = tablesTasks;
+        this.tableTaskListeners = tableTaskListeners;
     }
 
     @NonNull
@@ -43,6 +46,12 @@ public class TableTaskAdapters extends RecyclerView.Adapter<TableTaskAdapters.Ta
     @Override
     public void onBindViewHolder(@NonNull TableTaskViewHolder holder, int position) {
         holder.setTableTask(tablesTasks.get(position));
+        holder.layoutTask.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tableTaskListeners.onTableTaskClicked(tablesTasks.get(position), position);
+            }
+        });
     }
 
     @Override
