@@ -2,6 +2,7 @@ package com.friends.task_friends_android.activities;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -47,6 +48,7 @@ public class CreateTaskActivity extends AppCompatActivity {
     private ImageView imageTableTask;
     private String selectedImagePath;
     private TableTask alreadyAvailableTableTask;
+    private AlertDialog alertDialogDelete;
 
     private static final int REQUEST_CODE_STORAGE_PERMISSION = 1;
     private static final int REQUEST_CODE_SELECT_IMAGE = 2;
@@ -242,6 +244,21 @@ public class CreateTaskActivity extends AppCompatActivity {
                 }
             }
         });
+
+
+        if (alreadyAvailableTableTask != null){
+            layoutMore.findViewById(R.id.layoutDeleteTask).setVisibility(View.VISIBLE);
+            layoutMore.findViewById(R.id.layoutDeleteTask).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+        }
+
+    }
+
+    private void showDeleteTaskDialog(){
 
     }
 
