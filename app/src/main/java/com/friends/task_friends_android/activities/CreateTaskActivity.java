@@ -76,7 +76,7 @@ public class CreateTaskActivity extends AppCompatActivity {
         );
 
         selectedTaskColor = "#333333";
-        selectedImagePath = "";
+        selectedImagePath = "abc";
         initMore();
         setCategoryIndicatorColor();
     }
