@@ -251,10 +251,16 @@ public class CreateTaskActivity extends AppCompatActivity {
     }
 
     public void selectImage(){
-        Intent intent = new Intent();
+     /*   Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), REQUEST_CODE_SELECT_IMAGE );
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), REQUEST_CODE_SELECT_IMAGE ); */
+
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        if (intent.resolveActivity(getPackageManager()) != null){
+            startActivityForResult(intent, REQUEST_CODE_SELECT_IMAGE);
+            //startActivityForResult(Intent.createChooser(intent, "Select Picture"), REQUEST_CODE_SELECT_IMAGE );
+        }
     }
 
     @Override
