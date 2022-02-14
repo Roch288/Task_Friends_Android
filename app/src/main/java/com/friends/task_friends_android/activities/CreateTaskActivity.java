@@ -11,6 +11,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -44,10 +45,11 @@ public class CreateTaskActivity extends AppCompatActivity {
     private TextView textCreateDateTime;
     private View viewCategoryIndicator;
     private String selectedTaskColor;
-    private ImageView imageTask;
+    private ImageView imageTableTask;
 
     private static final int REQUEST_CODE_STORAGE_PERMISSION = 1;
     private static final int REQUEST_CODE_SELECT_IMAGE = 2;
+    private static final int GALLERY_REQUEST = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +67,7 @@ public class CreateTaskActivity extends AppCompatActivity {
         inputTaskDesc = findViewById(R.id.inputTaskDesc);
         textCreateDateTime = findViewById(R.id.textCreateDateTime);
         viewCategoryIndicator = findViewById(R.id.viewCategoryIndicator);
-        imageTask = findViewById(R.id.imageTask);
+        imageTableTask = findViewById(R.id.imageTask);
 
 
         textCreateDateTime.setText(
@@ -203,13 +205,11 @@ public class CreateTaskActivity extends AppCompatActivity {
         gradientDrawable.setColor(Color.parseColor(selectedTaskColor));
     }
 
-    @SuppressLint("QueryPermissionsNeeded")
-    private void selectImage(){
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        // intent.setType("image/*");
-        if(intent.resolveActivity(getPackageManager()) != null){
-            startActivityForResult(intent, REQUEST_CODE_SELECT_IMAGE);
-        }
+    public void selectImage(){
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), REQUEST_CODE_SELECT_IMAGE );
     }
 
     @Override
@@ -234,14 +234,28 @@ public class CreateTaskActivity extends AppCompatActivity {
                     try {
                         InputStream inputStream = getContentResolver().openInputStream(selectedImageUri);
                         Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                        imageTask.setImageBitmap(bitmap);
-                        imageTask.setVisibility(View.VISIBLE);
-                    }
-                    catch (Exception exception) {
+                        imageTableTask.setImageBitmap(bitmap);
+                        imageTableTask.setVisibility(View.VISIBLE);
+                    } catch (Exception exception){
                         Toast.makeText(this, exception.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }
             }
         }
+    }
+
+    private String getPathFromUri(Uri contentUri){
+        String filePath;
+        Cursor cursor = getContentResolver()
+                .query(contentUri, null, null, null, null);
+        if (cursor == null){
+            filePath = contentUri.getPath();
+        } else {
+            cursor.moveToFirst();
+            int index = cursor.getColumnIndex("_data");
+            filePath = cursor.getString(index);
+            cursor.close();
+        }
+        return filePath;
     }
 }

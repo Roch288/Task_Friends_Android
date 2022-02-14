@@ -124,6 +124,7 @@
                 android:layout_marginEnd="@dimen/_12sdp"
                 android:adjustViewBounds="true"
                 android:contentDescription="@string/app_name"
+                android:visibility="gone"
                 app:layout_constraintTop_toBottomOf="@id/inputTaskCategory"
                 />
 
