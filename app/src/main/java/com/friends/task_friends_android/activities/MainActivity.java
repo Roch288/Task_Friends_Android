@@ -26,7 +26,8 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements TableTaskListeners {
 
     public final static int REQUEST_CODE_ADD_TASK = 1;
-    public final static int REQUIEST_CODE_UPDATE_TASK = 2;
+    public final static int REQUEST_CODE_UPDATE_TASK = 2;
+    public final static int REQUEST_CODE_SHOW_NOTES = 3;
 
     private RecyclerView tasksRecyclerView;
     private List<Task> taskList;
@@ -69,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements TableTaskListener
         Intent intent = new Intent(getApplicationContext(), CreateTaskActivity.class);
         intent.putExtra("isViewUpdate", true);
         intent.putExtra("tableTask", tableTask);
-        startActivityForResult(intent, REQUIEST_CODE_UPDATE_TASK);
+        startActivityForResult(intent, REQUEST_CODE_UPDATE_TASK);
     }
 
     // Checking if the task list is empty , which indicates that the app just started since we have

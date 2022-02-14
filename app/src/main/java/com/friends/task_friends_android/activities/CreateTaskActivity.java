@@ -46,6 +46,7 @@ public class CreateTaskActivity extends AppCompatActivity {
     private String selectedTaskColor;
     private ImageView imageTableTask;
     private String selectedImagePath;
+    private TableTask alreadyAvailableTableTask;
 
     private static final int REQUEST_CODE_STORAGE_PERMISSION = 1;
     private static final int REQUEST_CODE_SELECT_IMAGE = 2;
@@ -77,9 +78,28 @@ public class CreateTaskActivity extends AppCompatActivity {
 
         selectedTaskColor = "#333333";
         selectedImagePath = "abc";
+
+        if (getIntent().getBooleanExtra("isViewUpdate", false)){
+            alreadyAvailableTableTask = (TableTask) getIntent().getSerializableExtra("tableTask");
+            setViewOrUpdateTableTask();
+        }
+
         initMore();
         setCategoryIndicatorColor();
     }
+
+    private void setViewOrUpdateTableTask(){
+        inputTaskTitle.setText(alreadyAvailableTableTask.getTitle());
+        inputTaskCategory.setText(alreadyAvailableTableTask.getCategory());
+        inputTaskDesc.setText(alreadyAvailableTableTask.getTaskText());
+        textCreateDateTime.setText(alreadyAvailableTableTask.getCreateDateTime());
+        if (alreadyAvailableTableTask.getImagePath() != null && !alreadyAvailableTableTask.getImagePath().trim().isEmpty()){
+            imageTableTask.setImageBitmap(BitmapFactory.decodeFile(alreadyAvailableTableTask.getImagePath()));
+            imageTableTask.setVisibility(View.VISIBLE);
+            selectedImagePath = alreadyAvailableTableTask.getImagePath();
+        }
+    }
+
 
     private void saveTask(){
         if (inputTaskTitle.getText().toString().trim().isEmpty()) {
@@ -97,6 +117,10 @@ public class CreateTaskActivity extends AppCompatActivity {
         tableTask.setCreateDateTime(textCreateDateTime.getText().toString());
         tableTask.setColor(selectedTaskColor);
         tableTask.setImagePath(selectedImagePath);
+
+        if (alreadyAvailableTableTask!=null){
+            tableTask.setId(alreadyAvailableTableTask.getId());
+        }
 
         // ROOM does not allow database operation on the main thread
         // Use of Async task to bypass it.
@@ -127,6 +151,7 @@ public class CreateTaskActivity extends AppCompatActivity {
     private void initMore(){
         final LinearLayout layoutMore = findViewById(R.id.layoutBottomBar);
         final BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(layoutMore);
+
         layoutMore.findViewById(R.id.textMore).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -174,6 +199,20 @@ public class CreateTaskActivity extends AppCompatActivity {
                 setCategoryIndicatorColor();
             }
         });
+
+        if (alreadyAvailableTableTask != null && alreadyAvailableTableTask.getColor() != null && !alreadyAvailableTableTask.getColor().trim().isEmpty()){
+            switch (alreadyAvailableTableTask.getColor()){
+                case "#FF018786":
+                    layoutMore.findViewById(R.id.viewColorLow).performClick();
+                    break;
+                case "#FDBE3B" :
+                    layoutMore.findViewById(R.id.viewColorMedium).performClick();
+                    break;
+                case "#FF4842" :
+                    layoutMore.findViewById(R.id.viewColorHigh).performClick();
+                    break;
+            }
+        }
 
         layoutMore.findViewById(R.id.layoutAddImage).setOnClickListener(new View.OnClickListener() {
             @Override
