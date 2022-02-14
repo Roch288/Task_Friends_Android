@@ -5,7 +5,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.PackageManagerCompat;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -46,6 +45,7 @@ public class CreateTaskActivity extends AppCompatActivity {
     private View viewCategoryIndicator;
     private String selectedTaskColor;
     private ImageView imageTableTask;
+    private String selectedImagePath;
 
     private static final int REQUEST_CODE_STORAGE_PERMISSION = 1;
     private static final int REQUEST_CODE_SELECT_IMAGE = 2;
@@ -76,6 +76,7 @@ public class CreateTaskActivity extends AppCompatActivity {
         );
 
         selectedTaskColor = "#333333";
+        selectedImagePath = "";
         initMore();
         setCategoryIndicatorColor();
     }
@@ -95,13 +96,7 @@ public class CreateTaskActivity extends AppCompatActivity {
         tableTask.setTaskText(inputTaskDesc.getText().toString());
         tableTask.setCreateDateTime(textCreateDateTime.getText().toString());
         tableTask.setColor(selectedTaskColor);
-
-//        final Task task = new Task();
-//        task.setTitle(inputTaskTitle.getText().toString());
-//        task.setCategory(inputTaskCategory.getText().toString());
-//        task.setTaskText(inputTaskDesc.getText().toString());
-//        task.setCreateDateTime(textCreateDateTime.getText().toString());
-
+        tableTask.setImagePath(selectedImagePath);
 
         // ROOM does not allow database operation on the main thread
         // Use of Async task to bypass it.
@@ -236,6 +231,8 @@ public class CreateTaskActivity extends AppCompatActivity {
                         Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
                         imageTableTask.setImageBitmap(bitmap);
                         imageTableTask.setVisibility(View.VISIBLE);
+
+                        selectedImagePath = getPathFromUri(selectedImageUri);
                     } catch (Exception exception){
                         Toast.makeText(this, exception.getMessage(), Toast.LENGTH_SHORT).show();
                     }
