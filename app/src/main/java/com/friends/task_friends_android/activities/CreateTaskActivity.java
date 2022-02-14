@@ -15,12 +15,15 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -251,7 +254,8 @@ public class CreateTaskActivity extends AppCompatActivity {
             layoutMore.findViewById(R.id.layoutDeleteTask).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                    showDeleteTaskDialog();
                 }
             });
         }
@@ -259,7 +263,55 @@ public class CreateTaskActivity extends AppCompatActivity {
     }
 
     private void showDeleteTaskDialog(){
+        if (alertDialogDelete != null){
+            AlertDialog.Builder builder = new AlertDialog.Builder(CreateTaskActivity.this);
+            View view = LayoutInflater.from(this).inflate(
+                    R.layout.layout_delete_task,
+                    (ViewGroup) findViewById(R.id.layoutlayoutDeleteTaskContainer)
 
+            );
+
+            builder.setView(view);
+            alertDialogDelete = builder.create();
+            if(alertDialogDelete.getWindow() != null){
+                alertDialogDelete.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+            }
+            view.findViewById(R.id.textDeleteTask).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    @SuppressLint("StaticFieldLeak")
+                    class DeleteTaskHandle extends AsyncTask<Void, Void, Void>{
+
+                        @Override
+                        protected Void doInBackground(Void... voids) {
+                            TableTaskDB.getDatabase(getApplicationContext()).tableTaskDao()
+                                    .deleteTask(alreadyAvailableTableTask);
+                            return null;
+                        }
+
+                        @Override
+                        protected void onPostExecute(Void aVoid) {
+                            super.onPostExecute(aVoid);
+                            Intent intent = new Intent();
+                            intent.putExtra("isTaskDeleted", true);
+                            setResult(RESULT_OK, intent);
+                            finish();
+                        }
+                    }
+
+                  new DeleteTaskHandle().execute();
+                }
+            });
+
+            view.findViewById(R.id.textCancelDelete).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    alertDialogDelete.dismiss();
+                }
+            });
+        }
+
+        alertDialogDelete.show();
     }
 
     private void setCategoryIndicatorColor() {
