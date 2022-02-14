@@ -263,7 +263,7 @@ public class CreateTaskActivity extends AppCompatActivity {
     }
 
     private void showDeleteTaskDialog(){
-        if (alertDialogDelete != null){
+        if (alertDialogDelete == null){
             AlertDialog.Builder builder = new AlertDialog.Builder(CreateTaskActivity.this);
             View view = LayoutInflater.from(this).inflate(
                     R.layout.layout_delete_task,
