@@ -128,6 +128,21 @@
                 app:layout_constraintTop_toBottomOf="@id/inputTaskCategory"
                 />
 
+            <ImageView
+                android:id="@+id/imageDelete"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_25sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginEnd="@dimen/_10sdp"
+                android:background="@drawable/background_delete"
+                android:src="@drawable/ic_delete"
+                android:contentDescription="@string/app_name"
+                android:padding="@dimen/_4sdp"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="@id/imageTask"
+                app:layout_constraintTop_toTopOf="@id/imageTask"
+                app:tint="@color/white" />
+
             <EditText
                 android:id="@+id/inputTaskDesc"
                 android:layout_width="match_parent"

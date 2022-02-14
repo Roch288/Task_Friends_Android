@@ -79,6 +79,16 @@ public class CreateTaskActivity extends AppCompatActivity {
         selectedTaskColor = "#333333";
         selectedImagePath = "abc";
 
+        findViewById(R.id.imageDelete).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                imageTableTask.setImageBitmap(null);
+                imageTableTask.setVisibility(View.GONE);
+                findViewById(R.id.imageDelete).setVisibility(View.GONE);
+                selectedImagePath = "";
+            }
+        });
+
         if (getIntent().getBooleanExtra("isViewUpdate", false)){
             alreadyAvailableTableTask = (TableTask) getIntent().getSerializableExtra("tableTask");
             setViewOrUpdateTableTask();
@@ -96,6 +106,7 @@ public class CreateTaskActivity extends AppCompatActivity {
         if (alreadyAvailableTableTask.getImagePath() != null && !alreadyAvailableTableTask.getImagePath().trim().isEmpty()){
             imageTableTask.setImageBitmap(BitmapFactory.decodeFile(alreadyAvailableTableTask.getImagePath()));
             imageTableTask.setVisibility(View.VISIBLE);
+            findViewById(R.id.imageDelete).setVisibility(View.VISIBLE);
             selectedImagePath = alreadyAvailableTableTask.getImagePath();
         }
     }
@@ -270,6 +281,7 @@ public class CreateTaskActivity extends AppCompatActivity {
                         Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
                         imageTableTask.setImageBitmap(bitmap);
                         imageTableTask.setVisibility(View.VISIBLE);
+                        findViewById(R.id.imageDelete).setVisibility(View.VISIBLE);
 
                         selectedImagePath = getPathFromUri(selectedImageUri);
                     } catch (Exception exception){
