@@ -18,7 +18,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.MediaStore;
+import android.util.Base64;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -27,12 +27,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.friends.task_friends_android.R;
-import com.friends.task_friends_android.database.TaskDatabase;
 import com.friends.task_friends_android.db.TableTaskDB;
 import com.friends.task_friends_android.entities.TableTask;
-import com.friends.task_friends_android.entities.Task;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -45,7 +45,7 @@ public class CreateTaskActivity extends AppCompatActivity {
     private View viewCategoryIndicator;
     private String selectedTaskColor;
     private ImageView imageTableTask;
-    private String selectedImagePath;
+    private String selectedImageBase64;
     private TableTask alreadyAvailableTableTask;
 
     private static final int REQUEST_CODE_STORAGE_PERMISSION = 1;
@@ -77,7 +77,7 @@ public class CreateTaskActivity extends AppCompatActivity {
         );
 
         selectedTaskColor = "#333333";
-        selectedImagePath = "abc";
+        selectedImageBase64 = "";
 
         if (getIntent().getBooleanExtra("isViewUpdate", false)){
             alreadyAvailableTableTask = (TableTask) getIntent().getSerializableExtra("tableTask");
@@ -94,9 +94,14 @@ public class CreateTaskActivity extends AppCompatActivity {
         inputTaskDesc.setText(alreadyAvailableTableTask.getTaskText());
         textCreateDateTime.setText(alreadyAvailableTableTask.getCreateDateTime());
         if (alreadyAvailableTableTask.getImagePath() != null && !alreadyAvailableTableTask.getImagePath().trim().isEmpty()){
-            imageTableTask.setImageBitmap(BitmapFactory.decodeFile(alreadyAvailableTableTask.getImagePath()));
+            // decode base64 string
+            byte[] bytes=Base64.decode(alreadyAvailableTableTask.getImagePath(),Base64.DEFAULT);
+            // Initialize bitmap
+            Bitmap bitmap= BitmapFactory.decodeByteArray(bytes,0,bytes.length);
+            // set bitmap on imageView
+            imageTableTask.setImageBitmap(bitmap);
             imageTableTask.setVisibility(View.VISIBLE);
-            selectedImagePath = alreadyAvailableTableTask.getImagePath();
+            selectedImageBase64 = alreadyAvailableTableTask.getImagePath();
         }
     }
 
@@ -116,7 +121,7 @@ public class CreateTaskActivity extends AppCompatActivity {
         tableTask.setTaskText(inputTaskDesc.getText().toString());
         tableTask.setCreateDateTime(textCreateDateTime.getText().toString());
         tableTask.setColor(selectedTaskColor);
-        tableTask.setImagePath(selectedImagePath);
+        tableTask.setImagePath(selectedImageBase64);
 
         if (alreadyAvailableTableTask!=null){
             tableTask.setId(alreadyAvailableTableTask.getId());
@@ -239,7 +244,7 @@ public class CreateTaskActivity extends AppCompatActivity {
         gradientDrawable.setColor(Color.parseColor(selectedTaskColor));
     }
 
-    public void selectImage(){
+    public void selectImage() {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -270,8 +275,8 @@ public class CreateTaskActivity extends AppCompatActivity {
                         Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
                         imageTableTask.setImageBitmap(bitmap);
                         imageTableTask.setVisibility(View.VISIBLE);
-
-                        selectedImagePath = getPathFromUri(selectedImageUri);
+                        selectedImageBase64 = encode(selectedImageUri);
+//                        selectedImagePath = getPathFromUri(selectedImageUri);
                     } catch (Exception exception){
                         Toast.makeText(this, exception.getMessage(), Toast.LENGTH_SHORT).show();
                     }
@@ -280,11 +285,28 @@ public class CreateTaskActivity extends AppCompatActivity {
         }
     }
 
+    private String encode(Uri imageUri) throws FileNotFoundException {
+        final InputStream imageStream = getContentResolver().openInputStream(imageUri);
+        final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+        String encodedImage = encodeImage(selectedImage);
+        return encodedImage;
+    }
+
+    private String encodeImage(Bitmap bm)
+    {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bm.compress(Bitmap.CompressFormat.JPEG,100,baos);
+        byte[] b = baos.toByteArray();
+        String encImage = Base64.encodeToString(b, Base64.DEFAULT);
+
+        return encImage;
+    }
+
     private String getPathFromUri(Uri contentUri){
         String filePath;
         Cursor cursor = getContentResolver()
                 .query(contentUri, null, null, null, null);
-        if (cursor == null){
+        if (cursor == null) {
             filePath = contentUri.getPath();
         } else {
             cursor.moveToFirst();
