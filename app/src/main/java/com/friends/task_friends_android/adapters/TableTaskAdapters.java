@@ -5,6 +5,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,17 +22,23 @@ import com.friends.task_friends_android.entities.TableTask;
 import com.friends.task_friends_android.listeners.TableTaskListeners;
 import com.makeramen.roundedimageview.RoundedImageView;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class TableTaskAdapters extends RecyclerView.Adapter<TableTaskAdapters.TableTaskViewHolder> {
 
     private List<TableTask> tablesTasks;
     private TableTaskListeners tableTaskListeners;
+    private Timer timer;
+    private List<TableTask> tableTaskssource;
 
     public TableTaskAdapters(List<TableTask> tablesTasks, TableTaskListeners tableTaskListeners) {
         this.tablesTasks = tablesTasks;
         this.tableTaskListeners = tableTaskListeners;
+        tableTaskssource = tablesTasks;
     }
 
     @NonNull
@@ -114,4 +122,39 @@ public class TableTaskAdapters extends RecyclerView.Adapter<TableTaskAdapters.Ta
             }
         }
     }
+
+    public void searchTasks(final String searchKeyword){
+        timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if (searchKeyword.trim().isEmpty()) {
+                    tablesTasks = tableTaskssource;
+                } else {
+                    ArrayList<TableTask> temp = new ArrayList<>();
+                    for (TableTask tableTask : tableTaskssource) {
+                        if (tableTask.getTitle().toLowerCase().contains(searchKeyword.toLowerCase())
+                        || tableTask.getCategory().toLowerCase().contains(searchKeyword.toLowerCase())
+                        || tableTask.getCategory().toLowerCase().contains(searchKeyword.toLowerCase())) {
+                            temp.add(tableTask);
+                        }
+                    }
+                    tablesTasks = temp;
+                }
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        notifyDataSetChanged();
+                    }
+                });
+            }
+        }, 500);
+    }
+
+    public void cancelTimer(){
+        if(timer != null){
+            timer.cancel();
+        }
+    }
+
 }
