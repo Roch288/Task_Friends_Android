@@ -10,4 +10,5 @@
     <string name="high">HIGH</string>
     <string name="set_priority">SET PRIORITY</string>
     <string name="add_image">Add Image</string>
+    <string name="delete_task">Delete Task</string>
 </resources>

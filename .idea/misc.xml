@@ -6,7 +6,7 @@
         <entry key="app/src/main/res/drawable/background_delete.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/background_dialoug.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_create_task.xml" value="0.12182971014492754" />
-        <entry key="app/src/main/res/layout/layout_bottombar.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/layout_bottombar.xml" value="0.125" />
       </map>
     </option>
   </component>
