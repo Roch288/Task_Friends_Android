@@ -11,4 +11,7 @@
     <string name="set_priority">SET PRIORITY</string>
     <string name="add_image">Add Image</string>
     <string name="delete_task">Delete Task</string>
+    <string name="do_you_want_to_delete">Do you want to delete?</string>
+    <string name="delete">DELETE</string>
+    <string name="cancel">CANCEL</string>
 </resources>

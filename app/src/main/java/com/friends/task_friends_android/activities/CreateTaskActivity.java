@@ -239,6 +239,16 @@ public class CreateTaskActivity extends AppCompatActivity {
             }
         });
 
+        if (alreadyAvailableTableTask != null){
+            layoutMore.findViewById(R.id.layoutDeleteTask).setVisibility(View.VISIBLE);
+            layoutMore.findViewById(R.id.layoutDeleteTask).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+        }
+
     }
 
     private void setCategoryIndicatorColor() {
