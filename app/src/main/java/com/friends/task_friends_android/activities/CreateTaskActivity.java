@@ -84,6 +84,8 @@ public class CreateTaskActivity extends AppCompatActivity {
             setViewOrUpdateTableTask();
         }
 
+
+
         initMore();
         setCategoryIndicatorColor();
     }
