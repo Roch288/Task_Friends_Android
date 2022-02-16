@@ -5,6 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/background_dialoug"
     android:layout_margin="@dimen/_10sdp"
+    android:id="@+id/layoutDeleteTaskContainer"
     android:layout_gravity="center">
 
     <ImageView

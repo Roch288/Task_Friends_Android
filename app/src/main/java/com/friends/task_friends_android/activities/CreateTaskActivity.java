@@ -2,6 +2,7 @@ package com.friends.task_friends_android.activities;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -14,12 +15,15 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Base64;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -47,6 +51,7 @@ public class CreateTaskActivity extends AppCompatActivity {
     private ImageView imageTableTask;
     private String selectedImageBase64;
     private TableTask alreadyAvailableTableTask;
+    private AlertDialog dialogDeleteTask;
 
     private static final int REQUEST_CODE_STORAGE_PERMISSION = 1;
     private static final int REQUEST_CODE_SELECT_IMAGE = 2;
@@ -244,11 +249,60 @@ public class CreateTaskActivity extends AppCompatActivity {
             layoutMore.findViewById(R.id.layoutDeleteTask).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                    showDeleteDialog();
                 }
             });
         }
 
+    }
+
+    private void showDeleteDialog(){
+        if (dialogDeleteTask == null) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(CreateTaskActivity.this);
+            View view = LayoutInflater.from(this).inflate(
+              R.layout.layout_delete_dialoug,
+                    (ViewGroup) findViewById(R.id.layoutDeleteTaskContainer)
+            );
+            builder.setView(view);
+            dialogDeleteTask = builder.create();
+            if (dialogDeleteTask.getWindow() != null) {
+                dialogDeleteTask.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+            }
+            view.findViewById(R.id.textDeleteTask).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    @SuppressLint("StaticFieldLeak")
+                    class DeleteTaskFunc extends AsyncTask<Void, Void, Void>{
+
+                        @Override
+                        protected Void doInBackground(Void... voids) {
+                            TableTaskDB.getDatabase(getApplicationContext()).tableTaskDao()
+                                    .deleteTask(alreadyAvailableTableTask);
+                            return null;
+                        }
+
+                        @Override
+                        protected void onPostExecute(Void unused) {
+                            super.onPostExecute(unused);
+                            Intent intent = new Intent();
+                            intent.putExtra("isTaskDeleted", true);
+                            setResult(RESULT_OK, intent);
+                            finish();
+                        }
+                    }
+                    new DeleteTaskFunc().execute();
+                }
+            });
+
+            view.findViewById(R.id.textCancelDelete).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialogDeleteTask.dismiss();
+                }
+            });
+        }
+        dialogDeleteTask.show();
     }
 
     private void setCategoryIndicatorColor() {
