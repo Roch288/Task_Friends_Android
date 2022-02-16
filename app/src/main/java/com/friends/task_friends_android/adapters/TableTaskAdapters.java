@@ -1,9 +1,11 @@
 package com.friends.task_friends_android.adapters;
 
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,7 +46,7 @@ public class TableTaskAdapters extends RecyclerView.Adapter<TableTaskAdapters.Ta
     }
 
     @Override
-    public void onBindViewHolder(@NonNull TableTaskViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull TableTaskViewHolder holder,int position) {
         holder.setTableTask(tablesTasks.get(position));
         holder.layoutTask.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,8 +101,12 @@ public class TableTaskAdapters extends RecyclerView.Adapter<TableTaskAdapters.Ta
                 gradientDrawable.setColor(Color.parseColor("#333333"));
             }
 
-            if (tableTask.getImagePath() == null) {
-                imageTableTask.setImageBitmap(BitmapFactory.decodeFile(tableTask.getImagePath()));
+            if (tableTask.getImagePath() != null) {
+
+                byte[] bytes= Base64.decode(tableTask.getImagePath(),Base64.DEFAULT);
+                Bitmap bitmap= BitmapFactory.decodeByteArray(bytes,0,bytes.length);
+                imageTableTask.setImageBitmap(bitmap);
+                //imageTableTask.setImageBitmap(BitmapFactory.decodeFile(tableTask.getImagePath()));
                 imageTableTask.setVisibility(View.VISIBLE);
             }
             else {
