@@ -9,7 +9,7 @@ import androidx.room.RoomDatabase;
 import com.friends.task_friends_android.dao.TableTaskDao;
 import com.friends.task_friends_android.entities.TableTask;
 
-@Database(entities = {TableTask.class}, version = 1, exportSchema = false)
+@Database(entities = {TableTask.class}, version = 2, exportSchema = false)
 public abstract class TableTaskDB extends RoomDatabase {
 
     private static TableTaskDB tableTaskDB;

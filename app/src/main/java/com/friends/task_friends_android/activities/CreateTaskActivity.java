@@ -35,6 +35,8 @@ import android.widget.Toast;
 
 import com.friends.task_friends_android.Categories;
 import com.friends.task_friends_android.R;
+import com.friends.task_friends_android.TaskCompleted;
+import com.friends.task_friends_android.adapters.CompletedSpinnerAdapter;
 import com.friends.task_friends_android.adapters.SpinnerAdapter;
 import com.friends.task_friends_android.db.TableTaskDB;
 import com.friends.task_friends_android.entities.TableTask;
@@ -60,6 +62,9 @@ public class CreateTaskActivity extends AppCompatActivity {
     private AlertDialog dialogDeleteTask;
     private Spinner spinner;
     private Categories selectedCategory;
+    private Spinner taskSpinner;
+    private TaskCompleted taskCompleted;
+
 
     private static final int REQUEST_CODE_STORAGE_PERMISSION = 1;
     private static final int REQUEST_CODE_SELECT_IMAGE = 2;
@@ -70,7 +75,28 @@ public class CreateTaskActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_task);
 
+        TaskCompleted.initCompleted();
         Categories.initCategories();
+        taskSpinner = (Spinner) findViewById(R.id.spinnerCompleted);
+        CompletedSpinnerAdapter customCompletedAdapter = new CompletedSpinnerAdapter(this,R.layout.spinner_completed, TaskCompleted.getTaskCompletedArrayList());
+        taskSpinner.setAdapter(customCompletedAdapter);
+        taskSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position == 0) {
+                    taskCompleted = null;
+                } else {
+                    taskCompleted = (TaskCompleted) parent.getSelectedItem();
+                    Log.d("Progress Report", taskCompleted.toString());
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
         spinner = (Spinner) findViewById(R.id.categorySpinner);
         SpinnerAdapter customAdapter = new SpinnerAdapter(this, R.layout.spinner_adapter, Categories.getCategoriesArrayList());
         spinner.setAdapter(customAdapter);
@@ -125,6 +151,23 @@ public class CreateTaskActivity extends AppCompatActivity {
     private void setViewOrUpdateTableTask() {
         inputTaskTitle.setText(alreadyAvailableTableTask.getTitle());
         inputTaskDesc.setText(alreadyAvailableTableTask.getTaskText());
+
+        ArrayList<TaskCompleted> taskCompleteds = TaskCompleted.getTaskCompletedArrayList();
+        for (TaskCompleted taskCompleted : taskCompleteds) {
+            if (taskCompleted.getCompleted().equals(alreadyAvailableTableTask.getCompleted())){
+                this.taskCompleted = taskCompleted;
+            }
+        }
+        if (taskCompleted != null){
+            taskSpinner.setSelection(taskCompleteds.indexOf(selectedCategory));
+            taskSpinner.setVisibility(View.VISIBLE);
+
+        }else
+        {
+            taskSpinner.setSelection(0);
+            taskSpinner.setVisibility(View.VISIBLE);
+        }
+
         ArrayList<Categories> categories = Categories.getCategoriesArrayList();
         for (Categories category : categories) {
             if (category.getCatName().equals(alreadyAvailableTableTask.getCategory())) {
@@ -170,6 +213,7 @@ public class CreateTaskActivity extends AppCompatActivity {
         tableTask.setCreateDateTime(textCreateDateTime.getText().toString());
         tableTask.setColor(selectedTaskColor);
         tableTask.setImagePath(selectedImageBase64);
+        tableTask.setCompleted(taskCompleted.getCompleted());
 
         if (alreadyAvailableTableTask != null) {
             tableTask.setId(alreadyAvailableTableTask.getId());

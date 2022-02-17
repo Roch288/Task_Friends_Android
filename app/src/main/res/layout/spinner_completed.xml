@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_task"
+    android:orientation="horizontal"
+    >
+
+    <TextView
+        android:id="@+id/spinnerCompletedText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_marginLeft="@dimen/_20sdp"
+        android:layout_gravity="center_vertical"
+        android:padding="@dimen/_13sdp"
+        android:fontFamily="@font/ubuntu_medium"
+        android:text="Incomplete"
+        android:textColor="@color/colorTextCategory"
+        android:textSize="@dimen/_13ssp"
+        />
+</LinearLayout>
