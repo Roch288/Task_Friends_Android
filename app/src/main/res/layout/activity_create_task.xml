@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.friends.task_friends_android.activities.CreateTaskActivity"
-    android:background="@color/colorPrimary">
+    android:background="@color/colorPrimary"
+    tools:context="com.friends.task_friends_android.activities.CreateTaskActivity">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -23,14 +23,14 @@
                 android:id="@+id/imageBack"
                 android:layout_width="@dimen/_30sdp"
                 android:layout_height="@dimen/_30sdp"
-                android:contentDescription="@string/app_name"
-                android:src="@drawable/ic_back"
                 android:layout_marginStart="@dimen/_6sdp"
                 android:layout_marginTop="@dimen/_20sdp"
                 android:layout_marginEnd="@dimen/_12sdp"
-                app:tint="@color/colorIcons"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/ic_back"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/colorIcons" />
 
 
             <ImageView
@@ -63,6 +63,10 @@
                 android:textColor="@color/white"
                 android:textColorHint="@color/colorTextHint"
                 android:textSize="@dimen/_16sdp"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginStart="@dimen/_12sdp"
+                android:layout_marginEnd="@dimen/_12sdp"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/imageBack"
                 tools:ignore="TouchTargetSizeCheck"
                 tools:layout_editor_absoluteX="22dp" />
@@ -75,33 +79,26 @@
                 android:includeFontPadding="false"
                 android:textColor="@color/colorIcons"
                 android:textSize="@dimen/_10sdp"
-                app:layout_constraintEnd_toEndOf="@id/inputTaskTitle"
-                app:layout_constraintStart_toStartOf="@id/inputTaskTitle"
-                app:layout_constraintTop_toBottomOf="@id/inputTaskTitle"
-                />
+                android:layout_marginStart="@dimen/_12sdp"
+                android:layout_marginEnd="@dimen/_12sdp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/inputTaskTitle" />
 
-            <EditText
-                android:id="@+id/inputTaskCategory"
+            <Spinner
+                android:id="@+id/categorySpinner"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_12sdp"
-                android:layout_marginTop="@dimen/_15sdp"
+                android:layout_marginStart="@dimen/_5sdp"
                 android:layout_marginEnd="@dimen/_12sdp"
-                android:background="@null"
-                android:fontFamily="@font/ubuntu_medium"
-                android:hint="@string/task_category"
-                android:importantForAutofill="no"
-                android:includeFontPadding="false"
-                android:inputType="textMultiLine"
-                android:paddingTop="@dimen/_8sdp"
-                android:paddingBottom="@dimen/_8sdp"
-                android:textColor="@color/colorTextCategory"
-                android:textColorHint="@color/colorTextHint"
-                android:textSize="@dimen/_13ssp"
+                android:layout_weight="7"
+                android:backgroundTint="@color/white"
+                android:gravity="center_vertical"
+                android:spinnerMode="dialog"
+                android:layout_marginTop="@dimen/_12sdp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@id/viewCategoryIndicator"
-                app:layout_constraintTop_toBottomOf="@id/textCreateDateTime"
-                tools:ignore="TouchTargetSizeCheck" />
+                app:layout_constraintTop_toBottomOf="@id/textCreateDateTime" />
 
 
             <View
@@ -110,10 +107,9 @@
                 android:layout_height="0dp"
                 android:layout_marginStart="@dimen/_12sdp"
                 android:background="@drawable/background_category_indicator"
-                app:layout_constraintBottom_toBottomOf="@id/inputTaskCategory"
+                app:layout_constraintBottom_toBottomOf="@id/categorySpinner"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/inputTaskCategory"
-                />
+                app:layout_constraintTop_toTopOf="@id/categorySpinner" />
 
             <ImageView
                 android:id="@+id/imageTask"
@@ -125,27 +121,27 @@
                 android:adjustViewBounds="true"
                 android:contentDescription="@string/app_name"
                 android:visibility="gone"
-                app:layout_constraintTop_toBottomOf="@id/inputTaskCategory"
-                />
+                app:layout_constraintTop_toBottomOf="@id/categorySpinner" />
 
             <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/layoutDelete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_12sdp"
                 android:layout_marginTop="@dimen/_15sdp"
                 android:layout_marginEnd="@dimen/_12sdp"
-                android:id="@+id/layoutDelete"
-                android:layout_width="wrap_content"
                 android:gravity="center_horizontal"
                 android:visibility="gone"
-                android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/imageTask"
-                >
+                tools:ignore="MissingConstraints">
+
                 <ImageView
+                    android:id="@+id/imageDelete"
                     android:layout_width="@dimen/_20sdp"
                     android:layout_height="@dimen/_20sdp"
-                    android:id="@+id/imageDelete"
+                    android:background="@drawable/background_delete"
                     android:contentDescription="@string/app_name"
                     android:src="@color/colorDefaultTaskColor"
-                    android:background="@drawable/background_delete"
 
                     />
 
@@ -159,7 +155,7 @@
                 android:layout_marginTop="@dimen/_15sdp"
                 android:layout_marginEnd="@dimen/_12sdp"
                 android:layout_marginBottom="@dimen/_15sdp"
-                android:background="@null"
+                android:background="@drawable/bg_white_stroke"
                 android:fontFamily="@font/ubuntu_regular"
                 android:gravity="top"
                 android:hint="@string/this_is_where_you_fill_the_description_of_the_task"
@@ -167,16 +163,17 @@
                 android:includeFontPadding="false"
                 android:inputType="textMultiLine"
                 android:minHeight="@dimen/_100sdp"
+                android:padding="8dp"
                 android:textColor="@color/white"
                 android:textColorHint="@color/colorTextHint"
                 android:textSize="@dimen/_13sdp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/imageTask"
-                />
+
+                app:layout_constraintTop_toBottomOf="@id/imageTask" />
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>
 
-    <include layout="@layout/layout_bottombar"/>
+    <include layout="@layout/layout_bottombar" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

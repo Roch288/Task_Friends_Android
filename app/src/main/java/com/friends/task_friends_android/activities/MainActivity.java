@@ -45,7 +45,6 @@ public class MainActivity extends AppCompatActivity implements TableTaskListener
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         ImageView imageAddTaskMain = findViewById(R.id.imageAddTaskMain);
         imageAddTaskMain.setOnClickListener(v -> startActivityForResult(
                 new Intent(getApplicationContext(), CreateTaskActivity.class),
@@ -132,6 +131,7 @@ public class MainActivity extends AppCompatActivity implements TableTaskListener
                 // Scrolling the recyclerview to the top */
 
                 if (requestCode == REQUEST_CODE_SHOW_TASKS){
+                    tableTasksList.clear();
                     tableTasksList.addAll(tableTasks);
                     tableTaskAdapters.notifyDataSetChanged();
                 } else if (requestCode == REQUEST_CODE_ADD_TASK) {

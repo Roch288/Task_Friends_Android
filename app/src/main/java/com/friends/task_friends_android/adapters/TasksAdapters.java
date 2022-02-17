@@ -63,7 +63,8 @@ public class TasksAdapters extends RecyclerView.Adapter<TasksAdapters.TaskViewHo
             }
             else
             {
-                textTaskCategory.setText(task.getCategory());
+               textTaskCategory.setText(task.getCategory());
+                //textTaskCategory.setText(task.getCatName());
             }
             textTaskCreateDate.setText(task.getCreateDateTime());
 
