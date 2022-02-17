@@ -9,6 +9,7 @@ import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -17,9 +18,12 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
+import android.media.MediaPlayer;
+import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -43,7 +47,9 @@ import com.friends.task_friends_android.entities.TableTask;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -60,12 +66,22 @@ public class CreateTaskActivity extends AppCompatActivity {
     private String selectedImageBase64;
     private TableTask alreadyAvailableTableTask;
     private AlertDialog dialogDeleteTask;
+    private AlertDialog dialogAudioRecord;
     private Spinner spinner;
     private Categories selectedCategory;
     private Spinner taskSpinner;
+    private String audioFilePath;
     private TaskCompleted taskCompleted;
-
-
+    private MediaRecorder mediaRecorder;
+    private MediaPlayer mediaPlayer;
+    private ImageView ibRecord;
+    private ImageView ibPlay;
+    private TextView tvTime;
+    private TextView tvRecordingPath;
+    private ImageView ivSimpleBq;
+    private boolean isRecording=false;
+    private boolean isPlaving=false;
+    private static final int REQUEST_AUDIO_PERMISSION = 101;
     private static final int REQUEST_CODE_STORAGE_PERMISSION = 1;
     private static final int REQUEST_CODE_SELECT_IMAGE = 2;
     private static final int GALLERY_REQUEST = 100;
@@ -327,6 +343,17 @@ public class CreateTaskActivity extends AppCompatActivity {
                 }
             }
         });
+        layoutMore.findViewById(R.id.layoutAudioRecord).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                if (checkRecordingPermission() == true) {
+                    showAudioDialog();
+                } else {
+                    Toast.makeText(getApplicationContext(), "No ACCESS", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
         if (alreadyAvailableTableTask != null) {
             layoutMore.findViewById(R.id.layoutDeleteTask).setVisibility(View.VISIBLE);
@@ -337,8 +364,114 @@ public class CreateTaskActivity extends AppCompatActivity {
                     showDeleteDialog();
                 }
             });
-        }
 
+
+        }
+    }
+
+    private void requestRecordingPermission(){
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, REQUEST_AUDIO_PERMISSION);
+    }
+
+    public boolean checkRecordingPermission(){
+        if (ContextCompat.checkSelfPermission(this,Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_DENIED){
+            requestRecordingPermission();
+            return false;
+        }
+        return true;
+    }
+
+    private String getRecordingFilePath()
+    {
+        ContextWrapper contextWrapper = new ContextWrapper(getApplicationContext());
+        File music = contextWrapper.getExternalFilesDir(Environment.DIRECTORY_MUSIC);
+        File file = new File (music, "testFile" + ".mp3");
+        return file.getPath();
+    }
+
+    private void showAudioDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(CreateTaskActivity.this);
+        View view = LayoutInflater.from(this).inflate(
+                R.layout.layout_audio_dialoug,
+                (ViewGroup) findViewById(R.id.layoutAudioRecord)
+        );
+        builder.setView(view);
+        dialogAudioRecord = builder.create();
+        if (dialogAudioRecord.getWindow() != null) {
+            dialogAudioRecord.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+        }
+        view.findViewById(R.id.audioRecord).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!isRecording){
+                    isRecording = true;
+                    mediaRecorder = new MediaRecorder();
+                    mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+                    mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+                    mediaRecorder.setOutputFile(getRecordingFilePath());
+                    audioFilePath = getRecordingFilePath();
+                    mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+
+                    try {
+                        mediaRecorder.prepare();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    mediaRecorder.start();
+                }
+                else {
+                    mediaRecorder.stop();
+                    mediaRecorder.release();
+                    mediaRecorder=null;
+                }
+            }
+        });
+        view.findViewById(R.id.audioPlay).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (!isPlaving){
+                    if (audioFilePath!=null)
+                    {
+                        try {
+                            mediaPlayer.setDataSource(getRecordingFilePath());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    else {
+
+                        Toast.makeText(getApplicationContext(), "No Recording", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    try {
+                        mediaPlayer.prepare();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    mediaPlayer.start();
+                    isPlaving = true;
+                }
+
+                else {
+                    mediaPlayer.stop();
+                    mediaPlayer.release();
+                  //  mediaPlayer = null;
+                   // mediaPlayer = new MediaPlayer();
+                    isPlaving = false;
+                }
+
+            }
+        });
+        view.findViewById(R.id.textDismiss).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogAudioRecord.dismiss();
+            }
+        });
+        dialogAudioRecord.show();
     }
 
     private void showDeleteDialog() {
@@ -409,6 +542,20 @@ public class CreateTaskActivity extends AppCompatActivity {
                 selectImage();
             } else {
                 Toast.makeText(this, "Permission Denied!", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        if (requestCode == REQUEST_AUDIO_PERMISSION){
+            if (grantResults.length > 0){
+                boolean permissionToRecord=grantResults[0]==PackageManager.PERMISSION_GRANTED;
+                if (permissionToRecord){
+
+                    Toast.makeText(this, "Permission Given", Toast.LENGTH_SHORT).show();
+                }
+                else {
+
+                    Toast.makeText(this, "Permission Denied!", Toast.LENGTH_SHORT).show();
+                }
             }
         }
     }

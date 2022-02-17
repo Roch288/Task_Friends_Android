@@ -26,5 +26,6 @@
     <color name="colorTaskColor6">#FFFFFFFF</color>
     <color name="colorTaskColor7">#FFFFFFFF</color>
     <color name="colorDelete">#FF4842</color>
+    <color name="colorRecord">#B03D3D</color>
     <color name="colorSearchBackground">#333333</color>
 </resources>
