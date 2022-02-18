@@ -115,21 +115,29 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/inputTaskTitle" />
-
-            <Spinner
-                android:id="@+id/categorySpinner"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_5sdp"
-                android:layout_marginEnd="@dimen/_12sdp"
-                android:layout_weight="7"
-                android:backgroundTint="@color/white"
-                android:gravity="center_vertical"
-                android:spinnerMode="dialog"
-                android:layout_marginTop="@dimen/_12sdp"
+            <EditText
+                android:paddingStart="@dimen/_10sdp"
+                android:id="@+id/inputTaskCategory"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_35sdp"
+                android:layout_marginTop="@dimen/_15sdp"
+                android:background="@null"
+                android:fontFamily="@font/ubuntu_medium"
+                android:hint="@string/task_category"
+                android:imeOptions="actionDone"
+                android:importantForAutofill="no"
+                android:includeFontPadding="false"
+                android:inputType="text"
+                android:textColor="@color/white"
+                android:textColorHint="@color/colorTextHint"
+                android:textSize="@dimen/_16sdp"
                 app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginStart="@dimen/_12sdp"
+                android:layout_marginEnd="@dimen/_12sdp"
                 app:layout_constraintStart_toStartOf="@id/viewCategoryIndicator"
-                app:layout_constraintTop_toBottomOf="@id/textCreateDateTime" />
+                app:layout_constraintTop_toBottomOf="@id/textCreateDateTime"
+                tools:ignore="TouchTargetSizeCheck"
+                tools:layout_editor_absoluteX="22dp" />
 
 
             <View
@@ -138,9 +146,9 @@
                 android:layout_height="0dp"
                 android:layout_marginStart="@dimen/_12sdp"
                 android:background="@drawable/background_category_indicator"
-                app:layout_constraintBottom_toBottomOf="@id/categorySpinner"
+                app:layout_constraintBottom_toBottomOf="@id/inputTaskCategory"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/categorySpinner" />
+                app:layout_constraintTop_toTopOf="@id/inputTaskCategory" />
 
             <ImageView
                 android:id="@+id/imageTask"
@@ -152,7 +160,7 @@
                 android:adjustViewBounds="true"
                 android:contentDescription="@string/app_name"
                 android:visibility="gone"
-                app:layout_constraintTop_toBottomOf="@id/categorySpinner" />
+                app:layout_constraintTop_toBottomOf="@id/inputTaskCategory" />
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/layoutDelete"

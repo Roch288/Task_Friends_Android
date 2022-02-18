@@ -54,7 +54,7 @@ public class TableTaskAdapters extends RecyclerView.Adapter<TableTaskAdapters.Ta
     }
 
     @Override
-    public void onBindViewHolder(@NonNull TableTaskViewHolder holder,int position) {
+    public void onBindViewHolder(@NonNull TableTaskViewHolder holder, @SuppressLint("RecyclerView") int position) {
         holder.setTableTask(tablesTasks.get(position));
         holder.layoutTask.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,7 +76,7 @@ public class TableTaskAdapters extends RecyclerView.Adapter<TableTaskAdapters.Ta
 
     static class TableTaskViewHolder extends RecyclerView.ViewHolder{
 
-        TextView textTableTitle, textTableCategory, textTableDate;
+        TextView textTableTitle, textTableCategory, textTableDate, textProgress, textComplete;
         LinearLayout layoutTask;
         RoundedImageView imageTableTask;
 
@@ -87,6 +87,8 @@ public class TableTaskAdapters extends RecyclerView.Adapter<TableTaskAdapters.Ta
             textTableDate = itemView.findViewById(R.id.textRVCreatedDateTime);
             layoutTask = itemView.findViewById(R.id.layoutTask);
             imageTableTask = itemView.findViewById(R.id.imageRVTask);
+            textProgress = itemView.findViewById(R.id.textProgress);
+            textComplete = itemView.findViewById(R.id.textComplete);
         }
 
         void setTableTask(TableTask tableTask) {
@@ -120,6 +122,16 @@ public class TableTaskAdapters extends RecyclerView.Adapter<TableTaskAdapters.Ta
             else {
                 imageTableTask.setVisibility(View.GONE);
             }
+/*
+            if (tableTask.getCompleted() == "Completed") {
+                textComplete.setVisibility(View.VISIBLE);
+
+            }
+            else {
+                textProgress.setVisibility(View.VISIBLE);
+            }
+            */
+
         }
     }
 

@@ -16,6 +16,7 @@
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="20dp"
         android:textColor="@color/white"
+        android:backgroundTint="@color/colorDefaultTaskColor"
         android:textSize="@dimen/_13ssp"
         tools:text="Incomplete" />
 

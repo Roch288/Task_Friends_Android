@@ -59,4 +59,29 @@
         android:textColor="@color/colorTaskSubtitleText"
         android:textSize="@dimen/_7ssp"
         />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textProgress"
+        android:backgroundTint="@color/colorTaskColor3"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_19ssp"
+        android:text="Incomplete"
+        android:textAlignment="center"
+        android:visibility="gone"
+        android:fontFamily="@font/ubuntu_medium"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textComplete"
+        android:backgroundTint="@color/purple_200"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_19ssp"
+        android:text="Incomplete"
+        android:textAlignment="center"
+        android:visibility="gone"
+        android:fontFamily="@font/ubuntu_medium"
+        />
 </LinearLayout>

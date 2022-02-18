@@ -58,7 +58,7 @@ import java.util.Locale;
 
 public class CreateTaskActivity extends AppCompatActivity {
 
-    private EditText inputTaskTitle, inputTaskDesc;
+    private EditText inputTaskTitle, inputTaskDesc ,inputTaskCat;
     private TextView textCreateDateTime;
     private View viewCategoryIndicator;
     private String selectedTaskColor;
@@ -72,6 +72,7 @@ public class CreateTaskActivity extends AppCompatActivity {
     private Spinner taskSpinner;
     private String audioFilePath;
     private TaskCompleted taskCompleted;
+    private String taskProgress;
     private MediaRecorder mediaRecorder;
     private MediaPlayer mediaPlayer;
     private ImageView ibRecord;
@@ -113,7 +114,7 @@ public class CreateTaskActivity extends AppCompatActivity {
             }
         });
 
-        spinner = (Spinner) findViewById(R.id.categorySpinner);
+      /*  spinner = (Spinner) findViewById(R.id.categorySpinner);
         SpinnerAdapter customAdapter = new SpinnerAdapter(this, R.layout.spinner_adapter, Categories.getCategoriesArrayList());
         spinner.setAdapter(customAdapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -131,7 +132,7 @@ public class CreateTaskActivity extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> parent) {
 
             }
-        });
+        });*/
 
         ImageView imageBack = findViewById(R.id.imageBack);
         imageBack.setOnClickListener(v -> onBackPressed());
@@ -140,6 +141,7 @@ public class CreateTaskActivity extends AppCompatActivity {
         imageSave.setOnClickListener(v -> saveTask());
 
         inputTaskTitle = findViewById(R.id.inputTaskTitle);
+        inputTaskCat = findViewById(R.id.inputTaskCategory);
         inputTaskDesc = findViewById(R.id.inputTaskDesc);
         textCreateDateTime = findViewById(R.id.textCreateDateTime);
         viewCategoryIndicator = findViewById(R.id.viewCategoryIndicator);
@@ -153,6 +155,9 @@ public class CreateTaskActivity extends AppCompatActivity {
 
         selectedTaskColor = "#333333";
         selectedImageBase64 = "";
+        taskProgress = "Incomplete";
+
+
 
         if (getIntent().getBooleanExtra("isViewUpdate", false)) {
             alreadyAvailableTableTask = (TableTask) getIntent().getSerializableExtra("tableTask");
@@ -167,6 +172,7 @@ public class CreateTaskActivity extends AppCompatActivity {
     private void setViewOrUpdateTableTask() {
         inputTaskTitle.setText(alreadyAvailableTableTask.getTitle());
         inputTaskDesc.setText(alreadyAvailableTableTask.getTaskText());
+        inputTaskCat.setText(alreadyAvailableTableTask.getCategory());
 
         ArrayList<TaskCompleted> taskCompleteds = TaskCompleted.getTaskCompletedArrayList();
         for (TaskCompleted taskCompleted : taskCompleteds) {
@@ -180,10 +186,10 @@ public class CreateTaskActivity extends AppCompatActivity {
 
         }else
         {
-            taskSpinner.setSelection(0);
+            taskSpinner.setSelection(1);
             taskSpinner.setVisibility(View.VISIBLE);
         }
-
+/*
         ArrayList<Categories> categories = Categories.getCategoriesArrayList();
         for (Categories category : categories) {
             if (category.getCatName().equals(alreadyAvailableTableTask.getCategory())) {
@@ -195,7 +201,7 @@ public class CreateTaskActivity extends AppCompatActivity {
         } else {
             spinner.setSelection(0);
         }
-
+*/
         textCreateDateTime.setText(alreadyAvailableTableTask.getCreateDateTime());
         if (alreadyAvailableTableTask.getImagePath() != null && !alreadyAvailableTableTask.getImagePath().trim().isEmpty()) {
             // decode base64 string
@@ -212,24 +218,26 @@ public class CreateTaskActivity extends AppCompatActivity {
 
     private void saveTask() {
         String taskTitle = inputTaskTitle.getText().toString().trim();
+        String taskCategory = inputTaskCat.getText().toString().trim();
         if (taskTitle.isEmpty()) {
             Toast.makeText(this, "TITLE CANNOT BE EMPTY!! ", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if (selectedCategory == null) {
-            Toast.makeText(this, "Please select category.", Toast.LENGTH_SHORT).show();
+        if (taskCategory.isEmpty()) {
+            Toast.makeText(this, "CATEGORY CANNOT BE EMPTY!!", Toast.LENGTH_SHORT).show();
             return;
         }
 
         final TableTask tableTask = new TableTask();
         tableTask.setTitle(inputTaskTitle.getText().toString());
-        tableTask.setCategory(selectedCategory.getCatName());
+        tableTask.setCategory(inputTaskCat.getText().toString());
+       // tableTask.setCategory(selectedCategory.getCatName());
         tableTask.setTaskText(inputTaskDesc.getText().toString());
         tableTask.setCreateDateTime(textCreateDateTime.getText().toString());
         tableTask.setColor(selectedTaskColor);
         tableTask.setImagePath(selectedImageBase64);
-        tableTask.setCompleted(taskCompleted.getCompleted());
+        tableTask.setCompleted(taskProgress);
 
         if (alreadyAvailableTableTask != null) {
             tableTask.setId(alreadyAvailableTableTask.getId());
@@ -347,11 +355,7 @@ public class CreateTaskActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                if (checkRecordingPermission() == true) {
-                    showAudioDialog();
-                } else {
-                    Toast.makeText(getApplicationContext(), "No ACCESS", Toast.LENGTH_SHORT).show();
-                }
+                showAudioDialog();
             }
         });
 
@@ -390,10 +394,11 @@ public class CreateTaskActivity extends AppCompatActivity {
     }
 
     private void showAudioDialog(){
+        if (dialogAudioRecord == null){
         AlertDialog.Builder builder = new AlertDialog.Builder(CreateTaskActivity.this);
         View view = LayoutInflater.from(this).inflate(
                 R.layout.layout_audio_dialoug,
-                (ViewGroup) findViewById(R.id.layoutAudioRecord)
+                (ViewGroup) findViewById(R.id.layoutAudioContainer)
         );
         builder.setView(view);
         dialogAudioRecord = builder.create();
@@ -471,8 +476,11 @@ public class CreateTaskActivity extends AppCompatActivity {
                 dialogAudioRecord.dismiss();
             }
         });
+        }
         dialogAudioRecord.show();
     }
+
+
 
     private void showDeleteDialog() {
         if (dialogDeleteTask == null) {
