@@ -164,6 +164,19 @@ public class CreateTaskActivity extends AppCompatActivity {
             setViewOrUpdateTableTask();
         }
 
+        if (getIntent().getBooleanExtra("isFromQuickAction", false)) {
+            String type = getIntent().getStringExtra("quickActionType");
+            if (type != null) {
+                if(type.equals("image")) {
+                    selectedImageBase64 = getIntent().getStringExtra("imagePath");
+                    imageTableTask.setImageBitmap(BitmapFactory.decodeFile(selectedImageBase64));
+                    imageTableTask.setVisibility(View.VISIBLE);
+                    //selectedImageBase64 = alreadyAvailableTableTask.getImagePath();
+                }
+            }
+        }
+
+
 
         initMore();
         setCategoryIndicatorColor();

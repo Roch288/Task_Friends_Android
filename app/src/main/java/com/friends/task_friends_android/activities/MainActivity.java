@@ -1,18 +1,31 @@
 package com.friends.task_friends_android.activities;
 
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Base64;
 import android.util.Log;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.friends.task_friends_android.R;
 import com.friends.task_friends_android.adapters.TableTaskAdapters;
@@ -23,6 +36,9 @@ import com.friends.task_friends_android.entities.Task;
 import com.friends.task_friends_android.listeners.TableTaskListeners;
 import com.friends.task_friends_android.adapters.TasksAdapters;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +47,10 @@ public class MainActivity extends AppCompatActivity implements TableTaskListener
     public final static int REQUEST_CODE_ADD_TASK = 1;
     public final static int REQUEST_CODE_UPDATE_TASK = 2;
     public final static int REQUEST_CODE_SHOW_TASKS = 3;
+    public final static int REQUEST_CODE_SELECT_IMAGE = 4;
+    public final static int REQUEST_CODE_STORAGE_PERMISSION = 5;
+    public final static int REQUEST_AUDIO_PERMISSION = 6;
+
 
     private RecyclerView tasksRecyclerView;
     private List<Task> taskList;
@@ -84,6 +104,84 @@ public class MainActivity extends AppCompatActivity implements TableTaskListener
                 }
             }
         });
+
+
+        findViewById(R.id.imageAddTask).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivityForResult(
+                        new Intent(getApplicationContext(), CreateTaskActivity.class),
+                        REQUEST_CODE_ADD_TASK
+                );
+            }
+        });
+
+        findViewById(R.id.imageAddImage).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (ContextCompat.checkSelfPermission(
+                        getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE
+                ) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(
+                            MainActivity.this,
+                            new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                            REQUEST_CODE_STORAGE_PERMISSION
+                    );
+                } else {
+                    selectImage();
+                }
+            }
+        });
+
+    }
+
+    public void selectImage() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), REQUEST_CODE_SELECT_IMAGE);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_CODE_STORAGE_PERMISSION && grantResults.length > 0) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                selectImage();
+            } else {
+                Toast.makeText(this, "Permission Denied!", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        if (requestCode == REQUEST_AUDIO_PERMISSION){
+            if (grantResults.length > 0){
+                boolean permissionToRecord=grantResults[0]==PackageManager.PERMISSION_GRANTED;
+                if (permissionToRecord){
+
+                    Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show();
+                }
+                else {
+
+                    Toast.makeText(this, "Permission Denied!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    }
+
+    private String encode(Uri imageUri) throws FileNotFoundException {
+        final InputStream imageStream = getContentResolver().openInputStream(imageUri);
+        final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+        String encodedImage = encodeImage(selectedImage);
+        return encodedImage;
+    }
+
+    private String encodeImage(Bitmap bm) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] b = baos.toByteArray();
+        String encImage = Base64.encodeToString(b, Base64.DEFAULT);
+
+        return encImage;
     }
 
     @Override
@@ -165,6 +263,26 @@ public class MainActivity extends AppCompatActivity implements TableTaskListener
             if (data != null){
                 getTask(REQUEST_CODE_UPDATE_TASK, data.getBooleanExtra("isTaskDeleted", false));
             }
+        }
+          else  if (requestCode == REQUEST_CODE_SELECT_IMAGE && resultCode == RESULT_OK) {
+                if (data != null) {
+                    Uri selectedImageUri = data.getData();
+                    if (selectedImageUri != null) {
+                        try {
+                            InputStream inputStream = getContentResolver().openInputStream(selectedImageUri);
+                            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+                            Intent intent = new Intent(getApplicationContext(), CreateTaskActivity.class);
+                            intent.putExtra("isFromQuickAction", true);
+                            intent.putExtra("quickActionType", "image");
+                            intent.putExtra("imagePath", encode(selectedImageUri));
+                            startActivityForResult(intent, REQUEST_CODE_ADD_TASK);
+//                        selectedImagePath = getPathFromUri(selectedImageUri);
+                        } catch (Exception exception) {
+                            Toast.makeText(this, exception.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+
         }
     }
 }
